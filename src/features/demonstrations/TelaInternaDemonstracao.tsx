@@ -112,8 +112,6 @@ export default function TelaInternaDemonstracao({
       <div className="demo-browser-bar">
         <div className="demo-browser-controles">
           <div className="demo-browser-pontos" aria-hidden="true"><i /><i /><i /></div>
-          <button type="button" onClick={() => navegar(anterior)} aria-label="Voltar uma página">‹</button>
-          <button type="button" onClick={() => navegar(proxima)} aria-label="Avançar uma página">›</button>
         </div>
         <div className="demo-browser-endereco">
           <Icone nome={sistema ? 'codigo' : 'site'} tamanho={13} />
@@ -181,48 +179,24 @@ export default function TelaInternaDemonstracao({
           alt={`${pagina.titulo} do projeto ${demonstracao.nome}`}
         />
 
-        <button
-          type="button"
-          className="demo-seta demo-seta-anterior"
-          onClick={() => navegar(anterior)}
-          aria-label="Página anterior"
-        >
-          ←
-        </button>
-        <button
-          type="button"
-          className="demo-seta demo-seta-proxima"
-          onClick={() => navegar(proxima)}
-          aria-label="Próxima página"
-        >
-          →
-        </button>
-
-        <div className="demo-acoes-contextuais" aria-label="Ações simuladas da demonstração">
-          <button type="button" onClick={() => navegar(proxima)}>
-            <span>→</span> Próxima tela
-          </button>
-          <button type="button" onClick={() => simularAcao(sistema ? 'novo_registro' : 'conversao')}>
-            <span>+</span> {sistema ? 'Novo registro' : 'Simular contato'}
-          </button>
-          {indiceSeguro > 0 && (
-            <button type="button" onClick={() => navegar(0)}>
-              <span>⌂</span> Voltar ao início
-            </button>
-          )}
-        </div>
-
-        {mensagemToast && (
-          <div className="demo-toast" role="status">
-            <span>{mensagemToast}</span>
-            <button type="button" onClick={() => definirMensagemToast('')} aria-label="Fechar aviso">×</button>
-          </div>
-        )}
       </div>
 
       <div className="demo-rodape-pagina">
-        <span><b>{pagina.titulo}</b>{pagina.subtitulo ? ` · ${pagina.subtitulo}` : ''}</span>
-        <span>Role para explorar · {indiceSeguro + 1} / {paginas.length}</span>
+        <span className="demo-rodape-descricao">
+          <b>{pagina.titulo}</b>{pagina.subtitulo ? ` · ${pagina.subtitulo}` : ''}
+        </span>
+        {mensagemToast ? (
+          <span className="demo-feedback-inline" role="status">{mensagemToast}</span>
+        ) : (
+          <button
+            className="demo-acao-simulada"
+            type="button"
+            onClick={() => simularAcao(sistema ? 'novo_registro' : 'conversao')}
+          >
+            {sistema ? '+ Novo registro' : 'Simular contato'}
+          </button>
+        )}
+        <span className="demo-contador-telas">Tela {indiceSeguro + 1} de {paginas.length}</span>
       </div>
     </div>
   )

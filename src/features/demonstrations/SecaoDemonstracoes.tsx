@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Icone, { type NomeIcone } from '@/components/Icone'
 import Revelar from '@/components/Revelar'
 import { demonstracoes } from '@/data/demonstracoes'
@@ -10,8 +10,6 @@ import { definirTagClarity, rastrearCliqueWhatsApp, rastrearEvento } from '@/uti
 import { criarLinkWhatsApp } from '@/utils/whatsapp'
 import TelaInternaDemonstracao from './TelaInternaDemonstracao'
 import FundoInterativoCases from './FundoInterativoCases'
-
-const COPIAS_DO_CARROSSEL = 3
 
 const iconesPorProjeto: Record<string, NomeIcone> = {
   dropzone: 'site',
@@ -27,16 +25,8 @@ const iconesPorProjeto: Record<string, NomeIcone> = {
 }
 
 export default function SecaoDemonstracoes() {
-  const trilho = useRef<HTMLDivElement | null>(null)
-  const indiceVirtualAtual = useRef(demonstracoes.length)
-  const temporizadorRolagem = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [demonstracaoAberta, definirDemonstracaoAberta] = useState<Demonstracao | null>(null)
   const [telaAtiva, definirTelaAtiva] = useState(0)
-
-  const demonstracoesCiclicas = useMemo(
-    () => Array.from({ length: COPIAS_DO_CARROSSEL }).flatMap(() => demonstracoes),
-    [],
-  )
 
   useEffect(() => {
     if (!demonstracaoAberta) return
@@ -54,31 +44,24 @@ export default function SecaoDemonstracoes() {
     }
   }, [demonstracaoAberta])
 
-  useEffect(() => {
-    const elementoTrilho = trilho.current
-    if (!elementoTrilho || demonstracoes.length === 0) return
-
-    const quadro = requestAnimationFrame(() => {
-      rolarParaIndice(demonstracoes.length, 'auto')
-      indiceVirtualAtual.current = demonstracoes.length
-    })
-
-    function reposicionarAoRedimensionar() {
-      const indiceCentral = obterIndiceCentral(indiceVirtualAtual.current)
-      rolarParaIndice(indiceCentral, 'auto')
-      indiceVirtualAtual.current = indiceCentral
-    }
-
-    window.addEventListener('resize', reposicionarAoRedimensionar)
-
-    return () => {
-      cancelAnimationFrame(quadro)
-      window.removeEventListener('resize', reposicionarAoRedimensionar)
-      if (temporizadorRolagem.current) clearTimeout(temporizadorRolagem.current)
-    }
-  }, [])
-
   function abrirDemonstracao(demonstracao: Demonstracao, origem = 'card') {
+    const cartaoSelecionado = document.querySelector<HTMLElement>(`[data-projeto="${demonstracao.id}"]`)
+    if (cartaoSelecionado) {
+      const retanguloCartao = cartaoSelecionado.getBoundingClientRect()
+      const topoCentralizado = window.scrollY + retanguloCartao.top
+        - (window.innerHeight - retanguloCartao.height) / 2
+
+      window.scrollTo({ top: topoCentralizado, behavior: 'auto' })
+
+      const trilho = cartaoSelecionado.closest<HTMLElement>('.trilho-demonstracoes')
+      if (trilho) {
+        const retanguloTrilho = trilho.getBoundingClientRect()
+        const novaPosicao = trilho.scrollLeft + retanguloCartao.left - retanguloTrilho.left
+          - (retanguloTrilho.width - retanguloCartao.width) / 2
+        trilho.scrollTo({ left: novaPosicao, behavior: 'auto' })
+      }
+    }
+
     definirTelaAtiva(0)
     definirDemonstracaoAberta(demonstracao)
     definirTagClarity('demo_aberta', demonstracao.id)
@@ -99,89 +82,6 @@ export default function SecaoDemonstracoes() {
     window.open(criarLinkWhatsApp(demonstracao.mensagemWhatsApp), '_blank', 'noopener,noreferrer')
   }
 
-  function obterCartoes() {
-    return Array.from(trilho.current?.querySelectorAll<HTMLElement>('.envoltorio-cartao-demonstracao') ?? [])
-  }
-
-  function rolarParaIndice(indice: number, comportamento: ScrollBehavior = 'smooth') {
-    const elementoTrilho = trilho.current
-    const cartoes = obterCartoes()
-    const cartaoDestino = cartoes[indice]
-    if (!elementoTrilho || !cartaoDestino) return
-
-    const retanguloTrilho = elementoTrilho.getBoundingClientRect()
-    const retanguloCartao = cartaoDestino.getBoundingClientRect()
-    const destinoRolagem = elementoTrilho.scrollLeft + (retanguloCartao.left - retanguloTrilho.left)
-    elementoTrilho.scrollTo({ left: destinoRolagem, behavior: comportamento })
-  }
-
-  function obterIndiceMaisProximo() {
-    const elementoTrilho = trilho.current
-    const cartoes = obterCartoes()
-    if (!elementoTrilho || cartoes.length === 0) return indiceVirtualAtual.current
-
-    const esquerdaDoTrilho = elementoTrilho.getBoundingClientRect().left
-    let indiceMaisProximo = 0
-    let menorDistancia = Number.POSITIVE_INFINITY
-
-    cartoes.forEach((cartao, indice) => {
-      const distancia = Math.abs(cartao.getBoundingClientRect().left - esquerdaDoTrilho)
-      if (distancia < menorDistancia) {
-        menorDistancia = distancia
-        indiceMaisProximo = indice
-      }
-    })
-
-    return indiceMaisProximo
-  }
-
-  function obterIndiceCentral(indiceVirtual: number) {
-    const quantidade = demonstracoes.length
-    if (quantidade === 0) return 0
-    const indiceOriginal = ((indiceVirtual % quantidade) + quantidade) % quantidade
-    return quantidade + indiceOriginal
-  }
-
-  function centralizarCopiaSeNecessario(indiceVirtual: number) {
-    const quantidade = demonstracoes.length
-    const estaNaPrimeiraCopia = indiceVirtual < quantidade
-    const estaNaUltimaCopia = indiceVirtual >= quantidade * 2
-    if (!estaNaPrimeiraCopia && !estaNaUltimaCopia) return
-
-    const indiceCentral = obterIndiceCentral(indiceVirtual)
-    indiceVirtualAtual.current = indiceCentral
-    rolarParaIndice(indiceCentral, 'auto')
-  }
-
-  function mover(direcao: -1 | 1) {
-    if (demonstracoes.length === 0) return
-
-    let indiceAtual = indiceVirtualAtual.current
-    const quantidade = demonstracoes.length
-
-    if (indiceAtual <= 0 || indiceAtual >= quantidade * COPIAS_DO_CARROSSEL - 1) {
-      indiceAtual = obterIndiceCentral(indiceAtual)
-      indiceVirtualAtual.current = indiceAtual
-      rolarParaIndice(indiceAtual, 'auto')
-    }
-
-    const proximoIndice = indiceAtual + direcao
-    indiceVirtualAtual.current = proximoIndice
-    rolarParaIndice(proximoIndice, 'smooth')
-  }
-
-  function sincronizarRolagem() {
-    const indiceMaisProximo = obterIndiceMaisProximo()
-    indiceVirtualAtual.current = indiceMaisProximo
-
-    if (temporizadorRolagem.current) clearTimeout(temporizadorRolagem.current)
-    temporizadorRolagem.current = setTimeout(() => {
-      const indiceFinal = obterIndiceMaisProximo()
-      indiceVirtualAtual.current = indiceFinal
-      centralizarCopiaSeNecessario(indiceFinal)
-    }, 160)
-  }
-
   return (
     <section className="secao secao-demonstracoes" id="demonstracoes">
       <FundoInterativoCases />
@@ -194,35 +94,21 @@ export default function SecaoDemonstracoes() {
           Os exemplos mostram direções visuais e funcionais. Cada projeto pode ser adaptado à identidade,
           ao processo e às necessidades do seu negócio.
         </p>
-        <button className="botao-ver-cases" type="button" onClick={() => mover(1)}>
-          Ver próximo <Icone nome="seta" tamanho={17} />
-        </button>
       </div>
 
       <div className="container area-carrossel">
-        <button
-          type="button"
-          className="controle-carrossel controle-carrossel-esquerda"
-          onClick={() => mover(-1)}
-          aria-label="Ver projeto anterior"
-        >
-          ←
-        </button>
-
-        <div className="trilho-demonstracoes" ref={trilho} onScroll={sincronizarRolagem}>
-          {demonstracoesCiclicas.map((demonstracao, indiceVirtual) => {
-            const indiceOriginal = indiceVirtual % demonstracoes.length
-            const copiaCentral = indiceVirtual >= demonstracoes.length && indiceVirtual < demonstracoes.length * 2
+        <div className="trilho-demonstracoes">
+          {demonstracoes.map((demonstracao, indice) => {
             const icone = iconesPorProjeto[demonstracao.id] ?? 'codigo'
 
             return (
               <Revelar
-                key={`${demonstracao.id}-${indiceVirtual}`}
-                atraso={copiaCentral ? Math.min(indiceOriginal * 0.055, 0.28) : 0}
+                key={demonstracao.id}
+                atraso={Math.min(indice * 0.055, 0.28)}
                 className="envoltorio-cartao-demonstracao"
               >
                 <article
-                  id={copiaCentral ? `projeto-${demonstracao.id}` : undefined}
+                  id={`projeto-${demonstracao.id}`}
                   className="cartao-demonstracao cartao-demonstracao-clicavel"
                   role="button"
                   tabIndex={0}
@@ -262,8 +148,8 @@ export default function SecaoDemonstracoes() {
                         height={900}
                       />
                     </div>
-                    <span className="selo-preview"><Icone nome="olho" tamanho={15} /> Abrir projeto</span>
-                    <span className="selo-telas-extra">Demo interativa</span>
+                    <span className="selo-preview"><Icone nome="olho" tamanho={15} /> Explorar produto</span>
+                    <span className="selo-telas-extra">{demonstracao.telas.length + 1} telas navegáveis</span>
                   </button>
 
                   <div className="recursos-resumidos">
@@ -303,15 +189,6 @@ export default function SecaoDemonstracoes() {
             )
           })}
         </div>
-
-        <button
-          type="button"
-          className="controle-carrossel controle-carrossel-direita"
-          onClick={() => mover(1)}
-          aria-label="Ver próximo projeto"
-        >
-          →
-        </button>
       </div>
 
       {demonstracaoAberta && (

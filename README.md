@@ -37,6 +37,8 @@ Cada case possui uma mensagem específica de interesse.
 
 A landing está preparada para Google Analytics 4 e Microsoft Clarity.
 
+Sem essas duas chaves o site funciona normalmente, mas ainda não envia dados para os painéis de análise.
+
 Crie um `.env.local` com:
 
 ```text
@@ -55,6 +57,11 @@ Eventos enviados ao GA4:
 
 Recomendação: use o GA4 para números, origem de tráfego, eventos e funis. Use o Microsoft Clarity para heatmaps, gravações de sessão e leitura visual de onde o visitante clicou ou travou.
 
+Painéis:
+
+- Google Analytics: https://analytics.google.com/
+- Microsoft Clarity: https://clarity.microsoft.com/
+
 ## Rodar
 
 ```bash
@@ -69,13 +76,12 @@ http://localhost:3000
 ```
 
 
-## Carrossel infinito
+## Vitrine de projetos
 
-A área de projetos agora utiliza um carrossel circular.
+A área de projetos utiliza uma faixa horizontal limpa, navegável por rolagem ou gesto de arrastar.
 
-- A seta para a direita pode ser clicada indefinidamente.
-- A seta para a esquerda também pode ser clicada indefinidamente.
-- Ao chegar ao último projeto, o próximo volta ao primeiro sem mostrar um fim.
-- Ao voltar antes do primeiro, o carrossel continua pelo último.
-- Arraste e swipe também são recentralizados automaticamente.
-- O botão "Ver mais cases" utiliza o mesmo avanço infinito.
+- Cada projeto aparece uma única vez;
+- os cards abrem demonstrações navegáveis por telas;
+- o projeto selecionado é centralizado antes da abertura;
+- a demonstração inclui ações simuladas rastreadas pelo Analytics;
+- controles flutuantes não cobrem as telas do produto.

@@ -1,12 +1,12 @@
 'use client'
 
-import HeroVideo from './HeroVideo'
+import Image from 'next/image'
 import { rastrearCliqueWhatsApp, rastrearEvento } from '@/utils/analytics'
 import { criarLinkContatoGenerico } from '@/utils/whatsapp'
 
 export default function SecaoHero() {
   return (
-    <section className="secao-hero hero-video-banner" id="inicio">
+    <section className="secao-hero hero-dominos" id="inicio">
       <div className="container conteudo-hero">
         <div className="texto-hero entrada-hero-texto">
           <span className="sobretitulo sobretitulo-claro">Tecnologia para negócios reais</span>
@@ -42,7 +42,14 @@ export default function SecaoHero() {
         </div>
 
         <div className="arte-hero entrada-hero-arte">
-          <HeroVideo />
+          <Image
+            src="/images/hero-dominos.png"
+            alt="Dominós da Monky representando automação, organização e crescimento"
+            width={1672}
+            height={941}
+            priority
+            sizes="(max-width: 960px) 100vw, 58vw"
+          />
         </div>
 
         <div className="rodape-hero" aria-hidden="true">

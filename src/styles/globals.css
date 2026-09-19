@@ -6457,6 +6457,12 @@ body.modal-aberto {
   overflow: hidden !important;
 }
 
+body.modal-aberto .whatsapp-flutuante {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: translateY(12px) !important;
+}
+
 @media (max-width: 960px) {
   .fundo-modal {
     padding: 4px !important;
@@ -6614,5 +6620,238 @@ body.modal-aberto {
   .demo-acoes-contextuais button {
     flex: 1 1 auto;
     justify-content: center;
+  }
+}
+
+/* === V19: vitrine de produtos com demos amplas e controles limpos === */
+.cabecalho-demonstracoes {
+  grid-template-columns: minmax(0, 1.2fr) minmax(300px, .72fr);
+}
+
+.botao-ver-cases,
+.controle-carrossel {
+  display: none !important;
+}
+
+.trilho-demonstracoes {
+  gap: 20px;
+  padding: 4px 2px 20px;
+  scroll-padding-inline: 2px;
+}
+
+.envoltorio-cartao-demonstracao {
+  flex: 0 0 calc((100% - 20px) / 2);
+}
+
+.cartao-demonstracao {
+  min-height: 0;
+  border-radius: 8px;
+  background: linear-gradient(180deg, rgba(255,255,255,.065), rgba(255,255,255,.028));
+}
+
+.cabecalho-cartao-demonstracao {
+  min-height: 132px;
+  padding: 22px 22px 16px;
+  grid-template-columns: 46px 1fr;
+  gap: 14px;
+}
+
+.cabecalho-cartao-demonstracao h3 {
+  margin-top: 2px;
+  font-size: 1.12rem;
+}
+
+.cabecalho-cartao-demonstracao p {
+  max-width: 48ch;
+  font-size: .82rem;
+  line-height: 1.5;
+}
+
+.preview-simples {
+  width: calc(100% - 28px);
+  height: auto;
+  aspect-ratio: 16 / 9.6;
+  margin-inline: 14px;
+  padding: 6px;
+  border-radius: 8px;
+}
+
+.preview-principal-unico {
+  border-radius: 5px;
+}
+
+.preview-principal-unico img {
+  transition: transform .28s ease, filter .28s ease;
+}
+
+.cartao-demonstracao-clicavel:hover .preview-principal-unico img {
+  transform: scale(1.015);
+  filter: saturate(1.05) contrast(1.02);
+}
+
+.selo-preview,
+.selo-telas-extra {
+  border-radius: 6px;
+}
+
+.recursos-resumidos {
+  padding: 14px 18px 0;
+}
+
+.acoes-demonstracao {
+  padding: 16px 18px 20px;
+}
+
+.acoes-demonstracao button {
+  min-height: 38px;
+  padding: 0 14px;
+  border: 1px solid rgba(166,132,255,.34);
+  border-radius: 7px;
+  background: rgba(113,66,224,.2);
+}
+
+.acoes-demonstracao a {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.demo-seta,
+.demo-acoes-contextuais,
+.demo-toast,
+.demo-browser-controles > button {
+  display: none !important;
+}
+
+.demo-navegavel {
+  grid-template-rows: 30px 48px minmax(0, 1fr) 44px !important;
+}
+
+.demo-browser-controles {
+  min-width: 48px;
+}
+
+.demo-viewport {
+  padding: 0 !important;
+  align-content: start !important;
+  place-items: start center !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  background: #08060c;
+}
+
+.demo-screen-img {
+  width: 100% !important;
+  height: auto !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  max-height: none !important;
+  border-radius: 0 !important;
+  object-position: top center !important;
+}
+
+.demo-rodape-pagina {
+  min-height: 44px !important;
+  padding: 0 12px !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 10px;
+  font-size: .56rem !important;
+}
+
+.demo-rodape-descricao {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.demo-acao-simulada {
+  min-height: 30px;
+  padding: 0 10px;
+  color: #f4efff;
+  border: 1px solid rgba(159,119,255,.28);
+  border-radius: 6px;
+  background: rgba(113,67,222,.17);
+  font-size: .55rem;
+  font-weight: 850;
+}
+
+.demo-feedback-inline {
+  max-width: 290px;
+  overflow: hidden;
+  color: #cdb9ff;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.demo-contador-telas {
+  color: #aaa3b1;
+  white-space: nowrap;
+}
+
+@media (max-width: 1080px) {
+  .envoltorio-cartao-demonstracao {
+    flex-basis: min(68vw, 620px);
+  }
+}
+
+@media (max-width: 960px) {
+  .cabecalho-demonstracoes {
+    grid-template-columns: 1fr;
+  }
+
+  .galeria-modal-projeto {
+    min-height: calc(100dvh - 64px) !important;
+    grid-template-rows: auto minmax(0, 1fr) !important;
+  }
+
+  .palco-galeria-modal {
+    min-height: calc(100dvh - 122px) !important;
+    height: auto !important;
+    padding: 4px !important;
+  }
+
+  .demo-navegavel {
+    min-height: calc(100dvh - 130px) !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .envoltorio-cartao-demonstracao {
+    flex-basis: calc(100vw - 42px);
+  }
+
+  .cartao-demonstracao {
+    min-height: 0;
+  }
+
+  .cabecalho-cartao-demonstracao {
+    min-height: 124px;
+    padding: 18px 17px 14px;
+  }
+
+  .preview-simples {
+    width: calc(100% - 20px);
+    margin-inline: 10px;
+  }
+
+  .demo-navegavel {
+    grid-template-rows: 28px 44px minmax(0, 1fr) 40px !important;
+  }
+
+  .demo-rodape-pagina {
+    min-height: 40px !important;
+    grid-template-columns: 1fr auto;
+    padding-inline: 8px !important;
+  }
+
+  .demo-rodape-descricao {
+    display: none;
+  }
+
+  .demo-feedback-inline {
+    max-width: 190px;
   }
 }
