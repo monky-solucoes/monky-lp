@@ -6855,3 +6855,95 @@ body.modal-aberto .whatsapp-flutuante {
     max-width: 190px;
   }
 }
+
+/* === V20: a demonstracao rola como uma pagina, sem rolagem dentro do produto === */
+.fundo-modal {
+  place-items: start center !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  scrollbar-gutter: stable;
+}
+
+.modal-projeto-catalogo {
+  height: auto !important;
+  min-height: calc(100dvh - 20px) !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+.modal-projeto-catalogo .topo-modal {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.conteudo-modal-catalogo {
+  flex: 0 0 auto !important;
+  height: auto !important;
+  min-height: 0 !important;
+  align-items: start;
+  overflow: visible !important;
+}
+
+.galeria-modal-projeto,
+.palco-galeria-modal,
+.demo-navegavel,
+.demo-viewport {
+  height: auto !important;
+  min-height: 0 !important;
+  overflow-y: visible !important;
+}
+
+.galeria-modal-projeto,
+.palco-galeria-modal {
+  overflow: visible !important;
+}
+
+.abas-galeria-modal {
+  position: sticky;
+  top: 52px;
+  z-index: 40;
+}
+
+.demo-navegavel {
+  grid-template-rows: 30px 48px auto 44px !important;
+  overflow: hidden !important;
+}
+
+.demo-viewport {
+  align-content: start !important;
+  place-items: start center !important;
+  overflow: visible !important;
+  scrollbar-gutter: auto;
+}
+
+.descricao-modal-catalogo {
+  min-height: 0 !important;
+  overflow: visible !important;
+}
+
+@media (min-width: 961px) {
+  .descricao-modal-catalogo {
+    position: sticky;
+    top: 52px;
+    align-self: start;
+  }
+}
+
+@media (max-width: 960px) {
+  .modal-projeto-catalogo {
+    height: auto !important;
+    min-height: calc(100dvh - 8px) !important;
+    max-height: none !important;
+  }
+
+  .galeria-modal-projeto,
+  .palco-galeria-modal,
+  .demo-navegavel {
+    min-height: 0 !important;
+  }
+
+  .descricao-modal-catalogo {
+    position: static;
+  }
+}

@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Icone, { type NomeIcone } from '@/components/Icone'
 import Revelar from '@/components/Revelar'
 import { demonstracoes } from '@/data/demonstracoes'
@@ -27,6 +27,7 @@ const iconesPorProjeto: Record<string, NomeIcone> = {
 export default function SecaoDemonstracoes() {
   const [demonstracaoAberta, definirDemonstracaoAberta] = useState<Demonstracao | null>(null)
   const [telaAtiva, definirTelaAtiva] = useState(0)
+  const fundoModalRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!demonstracaoAberta) return
@@ -80,6 +81,11 @@ export default function SecaoDemonstracoes() {
       categoria: demonstracao.categoria,
     })
     window.open(criarLinkWhatsApp(demonstracao.mensagemWhatsApp), '_blank', 'noopener,noreferrer')
+  }
+
+  function navegarTelaDemonstracao(indice: number) {
+    definirTelaAtiva(indice)
+    fundoModalRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   return (
@@ -193,6 +199,7 @@ export default function SecaoDemonstracoes() {
 
       {demonstracaoAberta && (
         <div
+          ref={fundoModalRef}
           className="fundo-modal fundo-modal-visivel"
           onMouseDown={() => definirDemonstracaoAberta(null)}
           role="presentation"
@@ -218,7 +225,7 @@ export default function SecaoDemonstracoes() {
                   <button
                     type="button"
                     className={telaAtiva === 0 ? 'ativa' : ''}
-                    onClick={() => definirTelaAtiva(0)}
+                    onClick={() => navegarTelaDemonstracao(0)}
                   >
                     Visão geral
                   </button>
@@ -227,7 +234,7 @@ export default function SecaoDemonstracoes() {
                       type="button"
                       key={tela.id}
                       className={telaAtiva === indice + 1 ? 'ativa' : ''}
-                      onClick={() => definirTelaAtiva(indice + 1)}
+                      onClick={() => navegarTelaDemonstracao(indice + 1)}
                     >
                       {tela.id === 'visao-geral' ? 'Painel' : tela.titulo}
                     </button>
@@ -238,7 +245,7 @@ export default function SecaoDemonstracoes() {
                   <TelaInternaDemonstracao
                     demonstracao={demonstracaoAberta}
                     indiceAtivo={telaAtiva}
-                    onNavegar={definirTelaAtiva}
+                    onNavegar={navegarTelaDemonstracao}
                   />
                 </div>
               </div>
