@@ -1,12 +1,23 @@
 'use client'
 
 import Image from 'next/image'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 export default function HeroVideo() {
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const [finalizado, setFinalizado] = useState(false)
   const [reduzirMovimento, setReduzirMovimento] = useState(false)
+
+  const iniciarVideo = useCallback(() => {
+    const video = videoRef.current
+    if (!video) return
+
+    video.defaultPlaybackRate = 0.85
+    video.playbackRate = 0.85
+    void video.play().catch(() => {
+      // O poster permanece visível se o navegador bloquear a reprodução automática.
+    })
+  }, [])
 
   useEffect(() => {
     const media = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -17,8 +28,14 @@ export default function HeroVideo() {
   }, [])
 
   useEffect(() => {
-    if (reduzirMovimento) setFinalizado(true)
-  }, [reduzirMovimento])
+    if (reduzirMovimento) {
+      setFinalizado(true)
+      return
+    }
+
+    setFinalizado(false)
+    iniciarVideo()
+  }, [iniciarVideo, reduzirMovimento])
 
   return (
     <div className={`hero-video ${finalizado ? 'hero-video-finalizado' : ''}`}>
@@ -37,19 +54,22 @@ export default function HeroVideo() {
           className="hero-video-elemento"
           src="/videos/monky-header.mp4"
           autoPlay
+          controls={false}
+          controlsList="nodownload noplaybackrate noremoteplayback"
+          disablePictureInPicture
+          disableRemotePlayback
+          loop={false}
           muted
           playsInline
           preload="auto"
+          tabIndex={-1}
+          onLoadedMetadata={iniciarVideo}
           onEnded={() => setFinalizado(true)}
           aria-hidden="true"
         />
       )}
 
       <div className="hero-video-mascara" aria-hidden="true" />
-      <div className="hero-video-assinatura">
-        <span>monky soluções</span>
-        <strong>Menos complicação. Mais resultado.</strong>
-      </div>
     </div>
   )
 }
