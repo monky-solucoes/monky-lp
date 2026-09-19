@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import Icone, { type NomeIcone } from '@/components/Icone'
 import Revelar from '@/components/Revelar'
 import { demonstracoes } from '@/data/demonstracoes'
@@ -24,37 +25,103 @@ const iconesPorProjeto: Record<string, NomeIcone> = {
   roteza: 'alvo',
 }
 
+const demonstracoesCarrossel = [0, 1, 2].flatMap((copia) =>
+  demonstracoes.map((demonstracao, indiceOriginal) => ({ demonstracao, indiceOriginal, copia })),
+)
+
+function normalizarIndice(indice: number, total: number) {
+  return ((indice % total) + total) % total
+}
+
 export default function SecaoDemonstracoes() {
   const [demonstracaoAberta, definirDemonstracaoAberta] = useState<Demonstracao | null>(null)
   const [telaAtiva, definirTelaAtiva] = useState(0)
-  const [modoVisualizacao, definirModoVisualizacao] = useState<'desktop' | 'mobile'>('desktop')
   const [indiceCardAtivo, definirIndiceCardAtivo] = useState(0)
   const fundoModalRef = useRef<HTMLDivElement>(null)
+  const conteudoModalRef = useRef<HTMLDivElement>(null)
   const trilhoRef = useRef<HTMLDivElement>(null)
   const indiceCardAtivoRef = useRef(0)
+  const indiceFisicoAtivoRef = useRef(demonstracoes.length)
   const pausaAutomaticaAteRef = useRef(0)
+  const temporizadorRecentralizacaoRef = useRef<number | null>(null)
+  const animacaoScrollRef = useRef<number | null>(null)
 
-  const rolarParaCard = useCallback((indice: number, pausarAutomatico = false) => {
+  const animarScrollRapido = useCallback((elemento: HTMLDivElement, destino: number, duracao = 145) => {
+    if (animacaoScrollRef.current !== null) {
+      window.cancelAnimationFrame(animacaoScrollRef.current)
+      animacaoScrollRef.current = null
+    }
+
+    const origem = elemento.scrollLeft
+    const distancia = destino - origem
+    if (Math.abs(distancia) < 1) {
+      elemento.scrollLeft = destino
+      return
+    }
+
+    const inicio = performance.now()
+    function quadro(agora: number) {
+      const progresso = Math.min(1, (agora - inicio) / duracao)
+      const suavizado = 1 - Math.pow(1 - progresso, 3)
+      elemento.scrollLeft = origem + distancia * suavizado
+
+      if (progresso < 1) animacaoScrollRef.current = window.requestAnimationFrame(quadro)
+      else animacaoScrollRef.current = null
+    }
+
+    animacaoScrollRef.current = window.requestAnimationFrame(quadro)
+  }, [])
+
+  const centralizarCardFisico = useCallback((indiceFisico: number, comportamento: 'auto' | 'rapido' = 'auto') => {
     const trilho = trilhoRef.current
     if (!trilho) return
 
     const cartoes = Array.from(trilho.querySelectorAll<HTMLElement>('.envoltorio-cartao-demonstracao'))
-    if (!cartoes.length) return
+    const cartao = cartoes[indiceFisico]
+    if (!cartao) return
 
-    const indiceNormalizado = (indice + cartoes.length) % cartoes.length
-    const cartao = cartoes[indiceNormalizado]
     const retanguloTrilho = trilho.getBoundingClientRect()
     const retanguloCartao = cartao.getBoundingClientRect()
     const centroTrilho = retanguloTrilho.left + retanguloTrilho.width / 2
     const centroCartao = retanguloCartao.left + retanguloCartao.width / 2
     const destino = trilho.scrollLeft + centroCartao - centroTrilho
+    const indiceLogico = normalizarIndice(indiceFisico, demonstracoes.length)
 
-    if (pausarAutomatico) pausaAutomaticaAteRef.current = Date.now() + 14000
+    indiceFisicoAtivoRef.current = indiceFisico
+    indiceCardAtivoRef.current = indiceLogico
+    definirIndiceCardAtivo(indiceLogico)
+    if (comportamento === 'rapido') animarScrollRapido(trilho, destino)
+    else trilho.scrollLeft = destino
+  }, [animarScrollRapido])
 
-    indiceCardAtivoRef.current = indiceNormalizado
-    definirIndiceCardAtivo(indiceNormalizado)
-    trilho.scrollTo({ left: destino, behavior: 'smooth' })
-  }, [])
+  const recentralizarSeNecessario = useCallback(() => {
+    if (temporizadorRecentralizacaoRef.current !== null) {
+      window.clearTimeout(temporizadorRecentralizacaoRef.current)
+    }
+
+    temporizadorRecentralizacaoRef.current = window.setTimeout(() => {
+      const total = demonstracoes.length
+      const indiceFisico = indiceFisicoAtivoRef.current
+      if (indiceFisico >= total && indiceFisico < total * 2) return
+
+      const indiceLogico = normalizarIndice(indiceFisico, total)
+      centralizarCardFisico(total + indiceLogico, 'auto')
+    }, 70)
+  }, [centralizarCardFisico])
+
+  const rolarParaCard = useCallback((indice: number, pausarAutomatico = false) => {
+    const total = demonstracoes.length
+    const indiceLogicoAtual = normalizarIndice(indiceFisicoAtivoRef.current, total)
+    let deslocamento = indice - indiceLogicoAtual
+
+    if (deslocamento > total / 2) deslocamento -= total
+    if (deslocamento < -total / 2) deslocamento += total
+
+    if (pausarAutomatico) pausaAutomaticaAteRef.current = Date.now() + 7000
+
+    centralizarCardFisico(indiceFisicoAtivoRef.current + deslocamento, 'rapido')
+    recentralizarSeNecessario()
+  }, [centralizarCardFisico, recentralizarSeNecessario])
 
   useEffect(() => {
     if (!demonstracaoAberta) return
@@ -64,13 +131,40 @@ export default function SecaoDemonstracoes() {
     }
 
     document.body.classList.add('modal-aberto')
+    document.documentElement.classList.add('modal-aberto')
     document.addEventListener('keydown', fecharComEscape)
 
+    const quadro = window.requestAnimationFrame(() => {
+      fundoModalRef.current?.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+      conteudoModalRef.current?.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+      conteudoModalRef.current?.querySelector<HTMLElement>('.descricao-modal-catalogo')?.scrollTo({ top: 0, behavior: 'auto' })
+    })
+
     return () => {
+      window.cancelAnimationFrame(quadro)
       document.body.classList.remove('modal-aberto')
+      document.documentElement.classList.remove('modal-aberto')
       document.removeEventListener('keydown', fecharComEscape)
     }
   }, [demonstracaoAberta])
+
+  useEffect(() => {
+    const quadro = window.requestAnimationFrame(() => {
+      centralizarCardFisico(demonstracoes.length, 'auto')
+    })
+
+    function recentralizarNoResize() {
+      window.requestAnimationFrame(() => {
+        centralizarCardFisico(indiceFisicoAtivoRef.current, 'auto')
+      })
+    }
+
+    window.addEventListener('resize', recentralizarNoResize, { passive: true })
+    return () => {
+      window.cancelAnimationFrame(quadro)
+      window.removeEventListener('resize', recentralizarNoResize)
+    }
+  }, [centralizarCardFisico])
 
   useEffect(() => {
     const trilhoAtual = trilhoRef.current!
@@ -97,61 +191,57 @@ export default function SecaoDemonstracoes() {
           }
         })
 
-        if (indiceMaisProximo !== indiceCardAtivoRef.current) {
-          indiceCardAtivoRef.current = indiceMaisProximo
-          definirIndiceCardAtivo(indiceMaisProximo)
+        if (indiceMaisProximo !== indiceFisicoAtivoRef.current) {
+          const indiceLogico = normalizarIndice(indiceMaisProximo, demonstracoes.length)
+          indiceFisicoAtivoRef.current = indiceMaisProximo
+          indiceCardAtivoRef.current = indiceLogico
+          definirIndiceCardAtivo(indiceLogico)
         }
+
+        recentralizarSeNecessario()
       })
     }
 
     function pausarAoInteragir() {
-      pausaAutomaticaAteRef.current = Date.now() + 14000
+      pausaAutomaticaAteRef.current = Date.now() + 5200
+      if (animacaoScrollRef.current !== null) {
+        window.cancelAnimationFrame(animacaoScrollRef.current)
+        animacaoScrollRef.current = null
+      }
     }
 
     trilhoAtual.addEventListener('scroll', atualizarCardAtivo, { passive: true })
     trilhoAtual.addEventListener('pointerdown', pausarAoInteragir, { passive: true })
 
     const intervalo = window.setInterval(() => {
-      const telaMobile = window.matchMedia('(max-width: 640px)').matches
       const movimentoReduzido = window.matchMedia('(prefers-reduced-motion: reduce)').matches
       const modalAberto = document.body.classList.contains('modal-aberto')
       const retanguloTrilho = trilhoAtual.getBoundingClientRect()
       const carrosselVisivel = retanguloTrilho.bottom > 0 && retanguloTrilho.top < window.innerHeight
 
-      if (!telaMobile || movimentoReduzido || modalAberto || document.hidden || !carrosselVisivel) return
+      if (movimentoReduzido || modalAberto || document.hidden || !carrosselVisivel) return
       if (Date.now() < pausaAutomaticaAteRef.current) return
 
       rolarParaCard(indiceCardAtivoRef.current + 1)
-    }, 8000)
+    }, 5200)
 
     return () => {
       cancelAnimationFrame(quadroAnimacao)
       window.clearInterval(intervalo)
       trilhoAtual.removeEventListener('scroll', atualizarCardAtivo)
       trilhoAtual.removeEventListener('pointerdown', pausarAoInteragir)
-    }
-  }, [rolarParaCard])
-
-  function abrirDemonstracao(demonstracao: Demonstracao, origem = 'card') {
-    const cartaoSelecionado = document.querySelector<HTMLElement>(`[data-projeto="${demonstracao.id}"]`)
-    if (cartaoSelecionado) {
-      const retanguloCartao = cartaoSelecionado.getBoundingClientRect()
-      const topoCentralizado = window.scrollY + retanguloCartao.top
-        - (window.innerHeight - retanguloCartao.height) / 2
-
-      window.scrollTo({ top: topoCentralizado, behavior: 'auto' })
-
-      const trilho = cartaoSelecionado.closest<HTMLElement>('.trilho-demonstracoes')
-      if (trilho) {
-        const retanguloTrilho = trilho.getBoundingClientRect()
-        const novaPosicao = trilho.scrollLeft + retanguloCartao.left - retanguloTrilho.left
-          - (retanguloTrilho.width - retanguloCartao.width) / 2
-        trilho.scrollTo({ left: novaPosicao, behavior: 'auto' })
+      if (temporizadorRecentralizacaoRef.current !== null) {
+        window.clearTimeout(temporizadorRecentralizacaoRef.current)
+      }
+      if (animacaoScrollRef.current !== null) {
+        window.cancelAnimationFrame(animacaoScrollRef.current)
+        animacaoScrollRef.current = null
       }
     }
+  }, [recentralizarSeNecessario, rolarParaCard])
 
+  function abrirDemonstracao(demonstracao: Demonstracao, origem = 'card') {
     definirTelaAtiva(0)
-    definirModoVisualizacao('desktop')
     definirDemonstracaoAberta(demonstracao)
     definirTagClarity('demo_aberta', demonstracao.id)
     rastrearEvento('card_click', {
@@ -173,7 +263,7 @@ export default function SecaoDemonstracoes() {
 
   function navegarTelaDemonstracao(indice: number) {
     definirTelaAtiva(indice)
-    fundoModalRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
+    conteudoModalRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   return (
@@ -196,17 +286,18 @@ export default function SecaoDemonstracoes() {
           <Icone nome="seta" tamanho={17} />
         </div>
         <div className="trilho-demonstracoes" ref={trilhoRef}>
-          {demonstracoes.map((demonstracao, indice) => {
+          {demonstracoesCarrossel.map(({ demonstracao, indiceOriginal, copia }, indiceFisico) => {
             const icone = iconesPorProjeto[demonstracao.id] ?? 'codigo'
 
             return (
               <Revelar
-                key={demonstracao.id}
-                atraso={Math.min(indice * 0.055, 0.28)}
+                key={`${copia}-${demonstracao.id}`}
+                atraso={Math.min(indiceOriginal * 0.055, 0.28)}
                 className="envoltorio-cartao-demonstracao"
               >
                 <article
-                  id={`projeto-${demonstracao.id}`}
+                  id={`projeto-${demonstracao.id}-${copia}`}
+                  data-indice-fisico={indiceFisico}
                   className="cartao-demonstracao cartao-demonstracao-clicavel"
                   role="button"
                   tabIndex={0}
@@ -288,6 +379,25 @@ export default function SecaoDemonstracoes() {
           })}
         </div>
 
+        <div className="controles-carrossel-desktop" aria-label="Navegação dos projetos no computador">
+          <button
+            type="button"
+            className="controle-carrossel-desktop controle-carrossel-anterior"
+            aria-label="Projeto anterior"
+            onClick={() => rolarParaCard(indiceCardAtivoRef.current - 1, true)}
+          >
+            <Icone nome="seta" tamanho={19} />
+          </button>
+          <button
+            type="button"
+            className="controle-carrossel-desktop controle-carrossel-proximo"
+            aria-label="Próximo projeto"
+            onClick={() => rolarParaCard(indiceCardAtivoRef.current + 1, true)}
+          >
+            <Icone nome="seta" tamanho={19} />
+          </button>
+        </div>
+
         <div className="controles-carrossel-mobile" aria-label="Navegação dos projetos">
           <div className="resumo-carrossel-mobile" aria-live="polite">
             <span>Projeto {indiceCardAtivo + 1} de {demonstracoes.length}</span>
@@ -310,7 +420,7 @@ export default function SecaoDemonstracoes() {
         </div>
       </div>
 
-      {demonstracaoAberta && (
+      {demonstracaoAberta && typeof document !== 'undefined' && createPortal(
         <div
           ref={fundoModalRef}
           className="fundo-modal fundo-modal-visivel"
@@ -332,7 +442,7 @@ export default function SecaoDemonstracoes() {
               <button type="button" onClick={() => definirDemonstracaoAberta(null)} aria-label="Fechar">×</button>
             </div>
 
-            <div className="conteudo-modal conteudo-modal-catalogo">
+            <div ref={conteudoModalRef} className="conteudo-modal conteudo-modal-catalogo">
               <div className="galeria-modal-projeto">
                 <div className="abas-galeria-modal" role="tablist" aria-label="Telas do projeto">
                   <button
@@ -354,46 +464,12 @@ export default function SecaoDemonstracoes() {
                   ))}
                 </div>
 
-                <div className="barra-modo-demonstracao">
-                  <span>Visualizar como</span>
-                  <div role="group" aria-label="Tamanho da demonstração">
-                    <button
-                      type="button"
-                      className={modoVisualizacao === 'desktop' ? 'ativo' : ''}
-                      aria-pressed={modoVisualizacao === 'desktop'}
-                      onClick={() => {
-                        definirModoVisualizacao('desktop')
-                        rastrearEvento('demo_viewport_change', {
-                          projeto_id: demonstracaoAberta.id,
-                          visualizacao: 'desktop',
-                        })
-                      }}
-                    >
-                      <Icone nome="site" tamanho={15} /> Computador
-                    </button>
-                    <button
-                      type="button"
-                      className={modoVisualizacao === 'mobile' ? 'ativo' : ''}
-                      aria-pressed={modoVisualizacao === 'mobile'}
-                      onClick={() => {
-                        definirModoVisualizacao('mobile')
-                        rastrearEvento('demo_viewport_change', {
-                          projeto_id: demonstracaoAberta.id,
-                          visualizacao: 'mobile',
-                        })
-                      }}
-                    >
-                      <Icone nome="celular" tamanho={15} /> Celular
-                    </button>
-                  </div>
-                </div>
-
-                <div className={`palco-galeria-modal modo-${modoVisualizacao}`}>
+                <div className="palco-galeria-modal modo-desktop">
                   <TelaInternaDemonstracao
                     demonstracao={demonstracaoAberta}
                     indiceAtivo={telaAtiva}
                     onNavegar={navegarTelaDemonstracao}
-                    modoVisualizacao={modoVisualizacao}
+                    modoVisualizacao="desktop"
                   />
                 </div>
               </div>
@@ -403,7 +479,7 @@ export default function SecaoDemonstracoes() {
                 <h2 id="titulo-demonstracao">{demonstracaoAberta.nome}</h2>
                 <p>{demonstracaoAberta.descricao}</p>
 
-                <h3>O projeto pode incluir</h3>
+                <h3>O projeto pode incluir e muito mais</h3>
                 <ul>
                   {demonstracaoAberta.recursos.map((recurso) => <li key={recurso}>{recurso}</li>)}
                 </ul>
@@ -427,12 +503,15 @@ export default function SecaoDemonstracoes() {
                     categoria: demonstracaoAberta.categoria,
                   })}
                 >
-                  Quero conversar sobre isso <Icone nome="seta" tamanho={17} />
+                  <span className="cta-desktop">Quero conversar sobre isso</span>
+                  <span className="cta-mobile">Conversar sobre isso</span>
+                  <Icone nome="seta" tamanho={17} />
                 </a>
               </aside>
             </div>
           </section>
-        </div>
+        </div>,
+        document.body,
       )}
     </section>
   )

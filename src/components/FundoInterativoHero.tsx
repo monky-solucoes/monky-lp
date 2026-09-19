@@ -1,17 +1,19 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import DotField from './react-bits/DotField'
 
 export default function FundoInterativoHero() {
-  const [ativo, definirAtivo] = useState(false)
+  const raiz = useRef<HTMLDivElement | null>(null)
+  const [ponteiroAtivo, definirPonteiroAtivo] = useState(false)
+  const [visivel, definirVisivel] = useState(true)
 
   useEffect(() => {
     const ponteiroPreciso = window.matchMedia('(hover: hover) and (pointer: fine)')
     const movimentoReduzido = window.matchMedia('(prefers-reduced-motion: reduce)')
 
     function sincronizar() {
-      definirAtivo(ponteiroPreciso.matches && !movimentoReduzido.matches)
+      definirPonteiroAtivo(ponteiroPreciso.matches && !movimentoReduzido.matches)
     }
 
     sincronizar()
@@ -24,9 +26,21 @@ export default function FundoInterativoHero() {
     }
   }, [])
 
+  useEffect(() => {
+    const elemento = raiz.current
+    if (!elemento || typeof IntersectionObserver === 'undefined') return
+
+    const observador = new IntersectionObserver(
+      ([entrada]) => definirVisivel(entrada.isIntersecting),
+      { rootMargin: '120px 0px' },
+    )
+    observador.observe(elemento)
+    return () => observador.disconnect()
+  }, [])
+
   return (
-    <div className="fundo-interativo-hero" aria-hidden="true">
-      {ativo && (
+    <div className="fundo-interativo-hero" ref={raiz} aria-hidden="true">
+      {ponteiroAtivo && visivel && (
         <DotField
           dotRadius={1.8}
           dotSpacing={19}

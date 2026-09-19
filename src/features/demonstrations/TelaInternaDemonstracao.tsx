@@ -334,97 +334,20 @@ export default function TelaInternaDemonstracao({
 
   return (
     <div
-      className={`demo-navegavel ${sistema ? 'demo-sistema' : 'demo-site'}`}
+      className="demo-navegavel demo-desktop-somente-imagem"
       data-demo={demonstracao.id}
     >
-      <div className="demo-browser-bar">
-        <div className="demo-browser-controles">
-          <div className="demo-browser-pontos" aria-hidden="true"><i /><i /><i /></div>
-        </div>
-        <div className="demo-browser-endereco">
-          <Icone nome={sistema ? 'codigo' : 'site'} tamanho={13} />
-          <span>{sistema ? 'app' : 'www'}.{demonstracao.id}.com.br/{pagina.id}</span>
-        </div>
-        <span className="demo-badge-navegavel">demo interativa</span>
-      </div>
-
-      <header className="demo-header-real">
-        <button
-          type="button"
-          className="demo-marca"
-          onClick={() => navegar(0)}
-          aria-label={`Ir para a página inicial de ${demonstracao.nome}`}
-        >
-          <span className="demo-marca-simbolo" aria-hidden="true">{demonstracao.nome.charAt(0)}</span>
-          <strong>{demonstracao.nome}</strong>
-        </button>
-
-        <nav className="demo-header-nav" aria-label={`Páginas de ${demonstracao.nome}`}>
-          {paginas.map((item, indice) => (
-            <button
-              key={`${item.id}-${indice}`}
-              type="button"
-              className={indice === indiceSeguro ? 'ativo' : ''}
-              aria-current={indice === indiceSeguro ? 'page' : undefined}
-              onClick={() => navegar(indice)}
-            >
-              {item.titulo}
-            </button>
-          ))}
-        </nav>
-
-        <button
-          type="button"
-          className={`demo-menu-mobile ${menuMobileAberto ? 'aberto' : ''}`}
-          aria-label="Abrir menu da demonstração"
-          aria-expanded={menuMobileAberto}
-          onClick={() => definirMenuMobileAberto((valor) => !valor)}
-        >
-          <span /> <span /> <span />
-        </button>
-
-        {menuMobileAberto && (
-          <div className="demo-menu-mobile-painel">
-            {paginas.map((item, indice) => (
-              <button
-                key={`mobile-${item.id}-${indice}`}
-                type="button"
-                className={indice === indiceSeguro ? 'ativo' : ''}
-                onClick={() => navegar(indice)}
-              >
-                {item.titulo}
-              </button>
-            ))}
-          </div>
-        )}
-      </header>
-
-      <div className="demo-viewport" tabIndex={0} aria-label={`Conteúdo de ${pagina.titulo}. Role para ver a página completa.`}>
+      <div
+        className="demo-viewport"
+        tabIndex={0}
+        aria-label={`Tela ${pagina.titulo} do projeto ${demonstracao.nome}`}
+      >
         <img
           key={pagina.imagem}
           className="demo-screen-img"
           src={pagina.imagem}
           alt={`${pagina.titulo} do projeto ${demonstracao.nome}`}
         />
-
-      </div>
-
-      <div className="demo-rodape-pagina">
-        <span className="demo-rodape-descricao">
-          <b>{pagina.titulo}</b>{pagina.subtitulo ? ` · ${pagina.subtitulo}` : ''}
-        </span>
-        {mensagemToast ? (
-          <span className="demo-feedback-inline" role="status">{mensagemToast}</span>
-        ) : (
-          <button
-            className="demo-acao-simulada"
-            type="button"
-            onClick={() => simularAcao(sistema ? 'novo_registro' : 'conversao')}
-          >
-            {sistema ? '+ Novo registro' : 'Simular contato'}
-          </button>
-        )}
-        <span className="demo-contador-telas">Tela {indiceSeguro + 1} de {paginas.length}</span>
       </div>
     </div>
   )

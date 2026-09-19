@@ -1,21 +1,34 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 export default function FundoInterativoCases() {
   const raiz = useRef<HTMLDivElement | null>(null)
   const quadro = useRef<number | null>(null)
   const alvo = useRef({ x: 50, y: 35, scroll: 0 })
+  const [visivel, definirVisivel] = useState(true)
 
   useEffect(() => {
     const elemento = raiz.current
-    if (!elemento) return
+    if (!elemento || typeof IntersectionObserver === 'undefined') return
+
+    const observador = new IntersectionObserver(
+      ([entrada]) => definirVisivel(entrada.isIntersecting),
+      { rootMargin: '160px 0px' },
+    )
+    observador.observe(elemento)
+    return () => observador.disconnect()
+  }, [])
+
+  useEffect(() => {
+    const elemento = raiz.current
+    if (!elemento || !visivel) return
+    const elementoAtual = elemento
 
     function desenhar() {
-      if (!elemento) return
-      elemento.style.setProperty('--mouse-x', `${alvo.current.x}%`)
-      elemento.style.setProperty('--mouse-y', `${alvo.current.y}%`)
-      elemento.style.setProperty('--scroll-shift', `${alvo.current.scroll}px`)
+      elementoAtual.style.setProperty('--mouse-x', `${alvo.current.x}%`)
+      elementoAtual.style.setProperty('--mouse-y', `${alvo.current.y}%`)
+      elementoAtual.style.setProperty('--scroll-shift', `${alvo.current.scroll}px`)
       quadro.current = null
     }
 
@@ -42,9 +55,12 @@ export default function FundoInterativoCases() {
     return () => {
       window.removeEventListener('pointermove', mover)
       window.removeEventListener('scroll', rolar)
-      if (quadro.current !== null) cancelAnimationFrame(quadro.current)
+      if (quadro.current !== null) {
+        cancelAnimationFrame(quadro.current)
+        quadro.current = null
+      }
     }
-  }, [])
+  }, [visivel])
 
   return (
     <div className="fundo-interativo-cases" ref={raiz} aria-hidden="true">
