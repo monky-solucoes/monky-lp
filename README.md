@@ -1,6 +1,6 @@
 # Monky — Landing page
 
-Landing page em Next.js + React + TypeScript, sem banco de dados e sem API.
+Landing page da Monky Soluções em Next.js + React + TypeScript, sem banco de dados e sem API.
 
 ## Visual
 
