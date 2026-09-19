@@ -9,9 +9,9 @@ Esta versão foi reformulada para ficar próxima da referência aprovada:
 - Hero roxo com texto à esquerda e dominós à direita;
 - logo PNG transparente;
 - quatro cards de soluções;
-- área de cases com três cards visíveis no desktop;
+- área de cases com dois cards amplos no desktop e faixa horizontal no celular;
 - cada case possui um exemplo visual real do tipo de sistema;
-- carrossel horizontal com setas flutuantes nas laterais;
+- faixa horizontal com indicação de gesto no celular;
 - cards compactos de outras soluções;
 - CTA roxo;
 - rodapé escuro;
@@ -36,6 +36,8 @@ Cada case possui uma mensagem específica de interesse.
 ## Analytics
 
 A landing está preparada para Google Analytics 4 e Microsoft Clarity.
+
+O passo a passo completo de criação, configuração, acesso aos painéis e leitura dos eventos está em [`docs/analytics.md`](docs/analytics.md).
 
 Sem essas duas chaves o site funciona normalmente, mas ainda não envia dados para os painéis de análise.
 

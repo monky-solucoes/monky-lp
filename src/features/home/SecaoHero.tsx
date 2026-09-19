@@ -1,24 +1,28 @@
 'use client'
 
 import Image from 'next/image'
+import FundoInterativoHero from '@/components/FundoInterativoHero'
 import { rastrearCliqueWhatsApp, rastrearEvento } from '@/utils/analytics'
 import { criarLinkContatoGenerico } from '@/utils/whatsapp'
 
 export default function SecaoHero() {
   return (
     <section className="secao-hero hero-dominos" id="inicio">
+      <FundoInterativoHero />
       <div className="container conteudo-hero">
-        <div className="texto-hero entrada-hero-texto">
-          <span className="sobretitulo sobretitulo-claro">Tecnologia para negócios reais</span>
-          <h1>
-            Menos rotina.
-            <span>Mais resultado.</span>
-          </h1>
+        <div className="bloco-texto-hero entrada-hero-texto">
+          <div className="texto-hero">
+            <span className="sobretitulo sobretitulo-claro">Tecnologia para negócios reais</span>
+            <h1>
+              Menos rotina.
+              <span>Mais resultado.</span>
+            </h1>
 
-          <p>
-            Sistemas, sites e automações pensados para simplificar processos,
-            organizar a operação e ajudar o seu negócio a crescer.
-          </p>
+            <p>
+              Sistemas, sites e automações pensados para simplificar processos,
+              organizar a operação e ajudar o seu negócio a crescer.
+            </p>
+          </div>
 
           <div className="acoes-hero">
             <a

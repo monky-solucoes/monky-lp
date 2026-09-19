@@ -45,11 +45,12 @@ export default function Cabecalho() {
 
         <button
           type="button"
-          className="botao-menu"
-          aria-label="Abrir menu"
+          className={`botao-menu ${menuAberto ? 'aberto' : ''}`}
+          aria-label={menuAberto ? 'Fechar menu' : 'Abrir menu'}
           aria-expanded={menuAberto}
           onClick={() => definirMenuAberto((estadoAtual) => !estadoAtual)}
         >
+          <span />
           <span />
           <span />
         </button>

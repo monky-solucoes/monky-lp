@@ -11,20 +11,20 @@ export default function Rodape() {
           <p>Tecnologia para negócios reais.</p>
         </div>
 
-        <div>
+        <div className="navegacao-rodape">
           <h3>Navegação</h3>
           <a href="#solucoes">Soluções</a>
           <a href="#demonstracoes">Cases</a>
           <a href="#sobre">Sobre</a>
         </div>
 
-        <div>
+        <div className="contato-rodape">
           <h3>Contato</h3>
           <a href={criarLinkContatoGenerico()} target="_blank" rel="noreferrer">
             Falar no WhatsApp
           </a>
           <a href={`mailto:${contato.email}`}>{contato.email}</a>
-          <span>{contato.cidade}</span>
+          <span className="cidade-rodape">{contato.cidade}</span>
         </div>
       </div>
 

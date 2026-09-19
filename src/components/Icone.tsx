@@ -20,6 +20,7 @@ export type NomeIcone =
   | 'alvo'
   | 'camadas'
   | 'chat'
+  | 'celular'
 
 interface IconeProps extends SVGProps<SVGSVGElement> {
   nome: NomeIcone
@@ -75,6 +76,7 @@ export default function Icone({ nome, tamanho = 22, ...props }: IconeProps) {
     alvo: <><circle cx="12" cy="12" r="8" /><circle cx="12" cy="12" r="4" /><circle cx="12" cy="12" r="1" /></>,
     camadas: <><path d="m12 3 9 5-9 5-9-5 9-5Z" /><path d="m3 12 9 5 9-5" /><path d="m3 16 9 5 9-5" /></>,
     chat: <><path d="M5 5h14v11H9l-4 3V5Z" /><path d="M8 9h8M8 12h5" /></>,
+    celular: <><rect x="6.5" y="2.5" width="11" height="19" rx="2" /><path d="M10 5h4" /><path d="M11.5 18.5h1" /></>,
   }[nome]
 
   return (

@@ -41,27 +41,23 @@ export default function CarregamentoInicial() {
       aria-live="polite"
       aria-label="Carregando experiência Monky"
     >
-      <div className="aura-loading aura-loading-esquerda" aria-hidden="true" />
-      <div className="aura-loading aura-loading-direita" aria-hidden="true" />
-      <div className="trilha-loading" aria-hidden="true" />
-
       <div className="conteudo-loading-fluido">
-        <div className="orbita-mascote" aria-hidden="true">
-          <span className="anel-loading anel-loading-um" />
-          <span className="anel-loading anel-loading-dois" />
-          <div className="mascote-fluido">
-            <Image
-              src="/images/monky-mascote.png"
-              alt=""
-              width={274}
-              height={259}
-              priority
-            />
-          </div>
+        <div className="marca-loading-fluido" aria-hidden="true">
+          <Image
+            className="logo-loading-fluido"
+            src="/images/monky-logo.png"
+            alt=""
+            width={779}
+            height={202}
+            priority
+          />
         </div>
 
         <div className="status-loading-fluido">
-          <span>Preparando sua experiência</span>
+          <div className="rotulo-loading-fluido">
+            <span>Preparando sua experiência</span>
+            <strong>{progresso}%</strong>
+          </div>
           <div
             className="linha-progresso-fluido"
             role="progressbar"

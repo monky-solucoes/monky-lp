@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import Icone, { type NomeIcone } from '@/components/Icone'
 import Revelar from '@/components/Revelar'
 import { demonstracoes } from '@/data/demonstracoes'
@@ -27,7 +27,32 @@ const iconesPorProjeto: Record<string, NomeIcone> = {
 export default function SecaoDemonstracoes() {
   const [demonstracaoAberta, definirDemonstracaoAberta] = useState<Demonstracao | null>(null)
   const [telaAtiva, definirTelaAtiva] = useState(0)
+  const [modoVisualizacao, definirModoVisualizacao] = useState<'desktop' | 'mobile'>('desktop')
+  const [indiceCardAtivo, definirIndiceCardAtivo] = useState(0)
   const fundoModalRef = useRef<HTMLDivElement>(null)
+  const trilhoRef = useRef<HTMLDivElement>(null)
+  const indiceCardAtivoRef = useRef(0)
+  const pausaAutomaticaAteRef = useRef(0)
+
+  const rolarParaCard = useCallback((indice: number, pausarAutomatico = false) => {
+    const trilho = trilhoRef.current
+    if (!trilho) return
+
+    const cartoes = Array.from(trilho.querySelectorAll<HTMLElement>('.envoltorio-cartao-demonstracao'))
+    if (!cartoes.length) return
+
+    const indiceNormalizado = (indice + cartoes.length) % cartoes.length
+    const cartao = cartoes[indiceNormalizado]
+    const retanguloTrilho = trilho.getBoundingClientRect()
+    const retanguloCartao = cartao.getBoundingClientRect()
+    const destino = trilho.scrollLeft + retanguloCartao.left - retanguloTrilho.left
+
+    if (pausarAutomatico) pausaAutomaticaAteRef.current = Date.now() + 14000
+
+    indiceCardAtivoRef.current = indiceNormalizado
+    definirIndiceCardAtivo(indiceNormalizado)
+    trilho.scrollTo({ left: destino, behavior: 'smooth' })
+  }, [])
 
   useEffect(() => {
     if (!demonstracaoAberta) return
@@ -44,6 +69,63 @@ export default function SecaoDemonstracoes() {
       document.removeEventListener('keydown', fecharComEscape)
     }
   }, [demonstracaoAberta])
+
+  useEffect(() => {
+    const trilhoAtual = trilhoRef.current!
+    if (!trilhoAtual) return
+
+    let quadroAnimacao = 0
+
+    function atualizarCardAtivo() {
+      cancelAnimationFrame(quadroAnimacao)
+      quadroAnimacao = requestAnimationFrame(() => {
+        const cartoes = Array.from(trilhoAtual.querySelectorAll<HTMLElement>('.envoltorio-cartao-demonstracao'))
+        const esquerdaTrilho = trilhoAtual.getBoundingClientRect().left
+        let indiceMaisProximo = 0
+        let menorDistancia = Number.POSITIVE_INFINITY
+
+        cartoes.forEach((cartao, indice) => {
+          const distancia = Math.abs(cartao.getBoundingClientRect().left - esquerdaTrilho)
+          if (distancia < menorDistancia) {
+            menorDistancia = distancia
+            indiceMaisProximo = indice
+          }
+        })
+
+        if (indiceMaisProximo !== indiceCardAtivoRef.current) {
+          indiceCardAtivoRef.current = indiceMaisProximo
+          definirIndiceCardAtivo(indiceMaisProximo)
+        }
+      })
+    }
+
+    function pausarAoInteragir() {
+      pausaAutomaticaAteRef.current = Date.now() + 14000
+    }
+
+    trilhoAtual.addEventListener('scroll', atualizarCardAtivo, { passive: true })
+    trilhoAtual.addEventListener('pointerdown', pausarAoInteragir, { passive: true })
+
+    const intervalo = window.setInterval(() => {
+      const telaMobile = window.matchMedia('(max-width: 640px)').matches
+      const movimentoReduzido = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      const modalAberto = document.body.classList.contains('modal-aberto')
+      const retanguloTrilho = trilhoAtual.getBoundingClientRect()
+      const carrosselVisivel = retanguloTrilho.bottom > 0 && retanguloTrilho.top < window.innerHeight
+
+      if (!telaMobile || movimentoReduzido || modalAberto || document.hidden || !carrosselVisivel) return
+      if (Date.now() < pausaAutomaticaAteRef.current) return
+
+      rolarParaCard(indiceCardAtivoRef.current + 1)
+    }, 8000)
+
+    return () => {
+      cancelAnimationFrame(quadroAnimacao)
+      window.clearInterval(intervalo)
+      trilhoAtual.removeEventListener('scroll', atualizarCardAtivo)
+      trilhoAtual.removeEventListener('pointerdown', pausarAoInteragir)
+    }
+  }, [rolarParaCard])
 
   function abrirDemonstracao(demonstracao: Demonstracao, origem = 'card') {
     const cartaoSelecionado = document.querySelector<HTMLElement>(`[data-projeto="${demonstracao.id}"]`)
@@ -64,6 +146,7 @@ export default function SecaoDemonstracoes() {
     }
 
     definirTelaAtiva(0)
+    definirModoVisualizacao('desktop')
     definirDemonstracaoAberta(demonstracao)
     definirTagClarity('demo_aberta', demonstracao.id)
     rastrearEvento('card_click', {
@@ -103,7 +186,11 @@ export default function SecaoDemonstracoes() {
       </div>
 
       <div className="container area-carrossel">
-        <div className="trilho-demonstracoes">
+        <div className="indicador-deslize-cards" aria-hidden="true">
+          <span>Deslize para ver mais projetos</span>
+          <Icone nome="seta" tamanho={17} />
+        </div>
+        <div className="trilho-demonstracoes" ref={trilhoRef}>
           {demonstracoes.map((demonstracao, indice) => {
             const icone = iconesPorProjeto[demonstracao.id] ?? 'codigo'
 
@@ -195,6 +282,27 @@ export default function SecaoDemonstracoes() {
             )
           })}
         </div>
+
+        <div className="controles-carrossel-mobile" aria-label="Navegação dos projetos">
+          <div className="resumo-carrossel-mobile" aria-live="polite">
+            <span>Projeto {indiceCardAtivo + 1} de {demonstracoes.length}</span>
+            <strong>{demonstracoes[indiceCardAtivo]?.nome}</strong>
+          </div>
+          <div className="paginacao-carrossel-mobile" role="tablist" aria-label="Projetos disponíveis">
+            {demonstracoes.map((demonstracao, indice) => (
+              <button
+                type="button"
+                role="tab"
+                key={demonstracao.id}
+                className={indiceCardAtivo === indice ? 'ativa' : ''}
+                aria-selected={indiceCardAtivo === indice}
+                aria-label={`Mostrar ${demonstracao.nome}`}
+                title={demonstracao.nome}
+                onClick={() => rolarParaCard(indice, true)}
+              />
+            ))}
+          </div>
+        </div>
       </div>
 
       {demonstracaoAberta && (
@@ -241,11 +349,46 @@ export default function SecaoDemonstracoes() {
                   ))}
                 </div>
 
-                <div className="palco-galeria-modal">
+                <div className="barra-modo-demonstracao">
+                  <span>Visualizar como</span>
+                  <div role="group" aria-label="Tamanho da demonstração">
+                    <button
+                      type="button"
+                      className={modoVisualizacao === 'desktop' ? 'ativo' : ''}
+                      aria-pressed={modoVisualizacao === 'desktop'}
+                      onClick={() => {
+                        definirModoVisualizacao('desktop')
+                        rastrearEvento('demo_viewport_change', {
+                          projeto_id: demonstracaoAberta.id,
+                          visualizacao: 'desktop',
+                        })
+                      }}
+                    >
+                      <Icone nome="site" tamanho={15} /> Computador
+                    </button>
+                    <button
+                      type="button"
+                      className={modoVisualizacao === 'mobile' ? 'ativo' : ''}
+                      aria-pressed={modoVisualizacao === 'mobile'}
+                      onClick={() => {
+                        definirModoVisualizacao('mobile')
+                        rastrearEvento('demo_viewport_change', {
+                          projeto_id: demonstracaoAberta.id,
+                          visualizacao: 'mobile',
+                        })
+                      }}
+                    >
+                      <Icone nome="celular" tamanho={15} /> Celular
+                    </button>
+                  </div>
+                </div>
+
+                <div className={`palco-galeria-modal modo-${modoVisualizacao}`}>
                   <TelaInternaDemonstracao
                     demonstracao={demonstracaoAberta}
                     indiceAtivo={telaAtiva}
                     onNavegar={navegarTelaDemonstracao}
+                    modoVisualizacao={modoVisualizacao}
                   />
                 </div>
               </div>
