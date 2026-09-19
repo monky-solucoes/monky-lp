@@ -45,7 +45,9 @@ export default function SecaoDemonstracoes() {
     const cartao = cartoes[indiceNormalizado]
     const retanguloTrilho = trilho.getBoundingClientRect()
     const retanguloCartao = cartao.getBoundingClientRect()
-    const destino = trilho.scrollLeft + retanguloCartao.left - retanguloTrilho.left
+    const centroTrilho = retanguloTrilho.left + retanguloTrilho.width / 2
+    const centroCartao = retanguloCartao.left + retanguloCartao.width / 2
+    const destino = trilho.scrollLeft + centroCartao - centroTrilho
 
     if (pausarAutomatico) pausaAutomaticaAteRef.current = Date.now() + 14000
 
@@ -80,12 +82,15 @@ export default function SecaoDemonstracoes() {
       cancelAnimationFrame(quadroAnimacao)
       quadroAnimacao = requestAnimationFrame(() => {
         const cartoes = Array.from(trilhoAtual.querySelectorAll<HTMLElement>('.envoltorio-cartao-demonstracao'))
-        const esquerdaTrilho = trilhoAtual.getBoundingClientRect().left
+        const retanguloTrilho = trilhoAtual.getBoundingClientRect()
+        const centroTrilho = retanguloTrilho.left + retanguloTrilho.width / 2
         let indiceMaisProximo = 0
         let menorDistancia = Number.POSITIVE_INFINITY
 
         cartoes.forEach((cartao, indice) => {
-          const distancia = Math.abs(cartao.getBoundingClientRect().left - esquerdaTrilho)
+          const retanguloCartao = cartao.getBoundingClientRect()
+          const centroCartao = retanguloCartao.left + retanguloCartao.width / 2
+          const distancia = Math.abs(centroCartao - centroTrilho)
           if (distancia < menorDistancia) {
             menorDistancia = distancia
             indiceMaisProximo = indice

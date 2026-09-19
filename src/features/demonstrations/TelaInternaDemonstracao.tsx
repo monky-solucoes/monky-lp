@@ -14,6 +14,70 @@ interface TelaInternaDemonstracaoProps {
 
 const idsSistema = new Set(['oficinapro', 'caixapilot', 'nexora', 'roteza'])
 
+interface ConfiguracaoMiniProduto {
+  chamada: string
+  apoio: string
+  cta: string
+  metricas?: [string, string][]
+}
+
+const configuracoesMiniProduto: Record<string, ConfiguracaoMiniProduto> = {
+  dropzone: {
+    chamada: 'Vista atitude. Encontre seu próximo drop.',
+    apoio: 'Coleções autorais, peças exclusivas e compra rápida pelo celular.',
+    cta: 'Explorar coleção',
+  },
+  acaiwave: {
+    chamada: 'Seu açaí, do seu jeito.',
+    apoio: 'Monte o pedido, escolha os adicionais e receba onde estiver.',
+    cta: 'Montar meu açaí',
+  },
+  oficinapro: {
+    chamada: 'Operação da oficina',
+    apoio: 'Ordens, agenda e veículos em uma visão simples.',
+    cta: 'Nova ordem de serviço',
+    metricas: [['OS abertas', '12'], ['Na oficina', '04']],
+  },
+  lumiere: {
+    chamada: 'Cuidado que realça o melhor de você.',
+    apoio: 'Tratamentos personalizados com segurança, leveza e naturalidade.',
+    cta: 'Agendar avaliação',
+  },
+  vitacare: {
+    chamada: 'Sua saúde acompanhada de perto.',
+    apoio: 'Especialistas, cuidado integrado e agendamento sem complicação.',
+    cta: 'Agendar consulta',
+  },
+  caixapilot: {
+    chamada: 'Resumo financeiro',
+    apoio: 'Entradas, saídas e compromissos sempre à mão.',
+    cta: 'Adicionar lançamento',
+    metricas: [['Saldo atual', 'R$ 84k'], ['Resultado', '+12%']],
+  },
+  carnext: {
+    chamada: 'O próximo carro começa aqui.',
+    apoio: 'Compare o estoque e encontre o veículo certo para o seu momento.',
+    cta: 'Ver veículos',
+  },
+  luxo: {
+    chamada: 'Excelência em cada detalhe.',
+    apoio: 'Uma seleção exclusiva de veículos para quem exige mais.',
+    cta: 'Conhecer o estoque',
+  },
+  nexora: {
+    chamada: 'Pipeline comercial',
+    apoio: 'Leads, tarefas e oportunidades no ritmo do seu time.',
+    cta: 'Nova oportunidade',
+    metricas: [['Em negociação', 'R$ 68k'], ['Oportunidades', '14']],
+  },
+  roteza: {
+    chamada: 'Operação em campo',
+    apoio: 'Rotas, equipes e atendimentos acompanhados em tempo real.',
+    cta: 'Novo atendimento',
+    metricas: [['Rotas hoje', '09'], ['Concluído', '86%']],
+  },
+}
+
 const rotulosInicio: Record<string, string> = {
   dropzone: 'Início',
   acaiwave: 'Início',
@@ -54,6 +118,11 @@ export default function TelaInternaDemonstracao({
   const indiceSeguro = Math.min(Math.max(indiceAtivo, 0), paginas.length - 1)
   const pagina = paginas[indiceSeguro]
   const sistema = idsSistema.has(demonstracao.id)
+  const configuracaoMini = configuracoesMiniProduto[demonstracao.id] ?? {
+    chamada: pagina.titulo,
+    apoio: pagina.subtitulo,
+    cta: sistema ? 'Novo registro' : 'Quero conhecer',
+  }
   const [menuMobileAberto, definirMenuMobileAberto] = useState(false)
   const [mensagemToast, definirMensagemToast] = useState('')
 
@@ -166,13 +235,29 @@ export default function TelaInternaDemonstracao({
             {sistema ? (
               <div className="demo-celular-painel-sistema">
                 <div className="demo-celular-painel-titulo">
-                  <span>{demonstracao.categoria}</span>
-                  <h2>{pagina.titulo}</h2>
-                  <p>Visão rápida da operação no celular.</p>
+                  <div>
+                    <span>{demonstracao.categoria}</span>
+                    <h2>{indiceSeguro === 0 ? configuracaoMini.chamada : pagina.titulo}</h2>
+                    <p>{indiceSeguro === 0 ? configuracaoMini.apoio : pagina.subtitulo}</p>
+                  </div>
+                  <button type="button" onClick={() => simularAcao('filtro_mobile')} aria-label="Filtrar informações">
+                    <Icone nome="grafico" tamanho={15} />
+                  </button>
                 </div>
+
+                <div className="demo-celular-captura demo-celular-captura-sistema">
+                  <img src={pagina.imagem} alt={`Prévia mobile de ${pagina.titulo} em ${demonstracao.nome}`} />
+                  <span><i /> Atualizado agora</span>
+                </div>
+
                 <div className="demo-celular-metricas">
-                  <article><span>Hoje</span><strong>{indiceSeguro + 8}</strong><small>itens ativos</small></article>
-                  <article><span>Progresso</span><strong>{72 + indiceSeguro * 4}%</strong><small>do período</small></article>
+                  {(configuracaoMini.metricas ?? [['Hoje', String(indiceSeguro + 8)], ['Progresso', `${72 + indiceSeguro * 4}%`]]).map(([rotulo, valor], indice) => (
+                    <article key={rotulo}>
+                      <span>{rotulo}</span>
+                      <strong>{valor}</strong>
+                      <small>{indice === 0 ? 'visão atual' : 'neste período'}</small>
+                    </article>
+                  ))}
                 </div>
                 <div className="demo-celular-lista">
                   {demonstracao.recursos.slice(0, 3).map((recurso, indice) => (
@@ -186,15 +271,18 @@ export default function TelaInternaDemonstracao({
               </div>
             ) : (
               <div className="demo-celular-hero-site">
-                <span>{demonstracao.categoria}</span>
-                <h2>{pagina.titulo}</h2>
-                <p>{pagina.subtitulo}</p>
-                <button type="button" onClick={() => simularAcao('cta_mobile')}>
-                  Quero conhecer <Icone nome="seta" tamanho={15} />
-                </button>
-                <div className="demo-celular-vitrine" aria-hidden="true">
-                  <i><Icone nome="site" tamanho={22} /></i>
-                  <div><span /><span /><span /></div>
+                <div className="demo-celular-copy-site">
+                  <span>{demonstracao.categoria}</span>
+                  <h2>{indiceSeguro === 0 ? configuracaoMini.chamada : pagina.titulo}</h2>
+                  <p>{indiceSeguro === 0 ? configuracaoMini.apoio : pagina.subtitulo}</p>
+                  <button type="button" onClick={() => simularAcao('cta_mobile')}>
+                    {configuracaoMini.cta} <Icone nome="seta" tamanho={15} />
+                  </button>
+                </div>
+
+                <div className="demo-celular-captura demo-celular-captura-site">
+                  <div className="demo-celular-captura-barra" aria-hidden="true"><i /><i /><i /><span /></div>
+                  <img src={pagina.imagem} alt={`Versão mobile inspirada na tela ${pagina.titulo} de ${demonstracao.nome}`} />
                 </div>
               </div>
             )}
@@ -215,7 +303,7 @@ export default function TelaInternaDemonstracao({
                 type="button"
                 onClick={() => simularAcao(sistema ? 'novo_registro_mobile' : 'conversao_mobile')}
               >
-                {sistema ? 'Simular novo registro' : 'Simular contato'}
+                {configuracaoMini.cta}
                 <Icone nome="seta" tamanho={15} />
               </button>
 

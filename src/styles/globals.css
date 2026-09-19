@@ -7902,12 +7902,16 @@ body.modal-aberto .whatsapp-flutuante {
   }
 
   .trilho-demonstracoes {
+    --largura-card-mobile: min(82vw, 340px);
     gap: 14px;
+    padding: 4px max(0px, calc(50% - 170px)) 20px;
+    scroll-padding-inline: max(0px, calc(50% - 170px));
     touch-action: pan-x pan-y;
   }
 
   .envoltorio-cartao-demonstracao {
-    flex-basis: min(82vw, 340px);
+    flex-basis: var(--largura-card-mobile);
+    scroll-snap-align: center;
   }
 
   .controles-carrossel-mobile {
@@ -7992,5 +7996,326 @@ body.modal-aberto .whatsapp-flutuante {
     border-color: rgba(178,145,255,.3) !important;
     background: #17101f !important;
     box-shadow: 0 20px 48px rgba(0,0,0,.52) !important;
+  }
+}
+
+/* === V23: mini produtos responsivos e com identidade própria === */
+.demo-celular,
+.demo-celular-aparelho,
+.demo-celular-conteudo,
+.demo-celular-painel-sistema,
+.demo-celular-hero-site {
+  min-width: 0;
+}
+
+.demo-celular-painel-titulo {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.demo-celular-painel-titulo > div {
+  min-width: 0;
+}
+
+.demo-celular-painel-titulo > button {
+  flex: 0 0 34px;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  color: var(--demo-mobile-accent);
+  border: 1px solid color-mix(in srgb, var(--demo-mobile-accent) 18%, #e5e0e8);
+  border-radius: 7px;
+  background: color-mix(in srgb, var(--demo-mobile-accent) 8%, #fff);
+}
+
+.demo-celular-painel-titulo h2,
+.demo-celular-copy-site h2 {
+  overflow-wrap: anywhere;
+}
+
+.demo-celular-captura {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(28, 21, 33, .12);
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 12px 28px rgba(28, 20, 34, .1);
+}
+
+.demo-celular-captura img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.demo-celular-captura-sistema {
+  height: 132px;
+  margin-top: 14px;
+}
+
+.demo-celular-captura-sistema > span {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  padding: 5px 7px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #fff;
+  border-radius: 5px;
+  background: rgba(20, 16, 24, .78);
+  font-size: .5rem;
+  font-weight: 800;
+  backdrop-filter: blur(7px);
+}
+
+.demo-celular-captura-sistema > span i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #5ee494;
+  box-shadow: 0 0 0 3px rgba(94, 228, 148, .15);
+}
+
+.demo-celular-hero-site {
+  min-height: 0;
+  padding: 24px 14px 16px;
+  background: linear-gradient(150deg, color-mix(in srgb, var(--demo-mobile-accent) 88%, #19131f), #17121c 86%);
+}
+
+.demo-celular-hero-site::after {
+  width: 150px;
+  height: 150px;
+  right: -84px;
+  bottom: auto;
+  top: 24px;
+  border-width: 28px;
+}
+
+.demo-celular-copy-site {
+  position: relative;
+  z-index: 1;
+}
+
+.demo-celular-copy-site > span {
+  display: block;
+  color: rgba(255,255,255,.7);
+  font-size: .5rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.demo-celular-copy-site h2 {
+  margin: 8px 0 7px;
+  max-width: 92%;
+  color: #fff;
+  font-size: clamp(1.35rem, 8vw, 1.75rem);
+  line-height: 1.03;
+}
+
+.demo-celular-copy-site p {
+  max-width: 91%;
+  color: rgba(255,255,255,.76);
+  font-size: .64rem;
+  line-height: 1.48;
+}
+
+.demo-celular-copy-site > button {
+  min-height: 38px;
+  margin-top: 15px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: #19131f;
+  border: 0;
+  border-radius: 7px;
+  background: #fff;
+  font-size: .61rem;
+  font-weight: 900;
+}
+
+.demo-celular-captura-site {
+  z-index: 1;
+  height: 154px;
+  margin-top: 18px;
+  border-color: rgba(255,255,255,.2);
+  background: #f5f3f6;
+  box-shadow: 0 18px 38px rgba(5, 2, 8, .28);
+}
+
+.demo-celular-captura-barra {
+  height: 16px;
+  padding: 0 6px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  background: #f5f3f6;
+}
+
+.demo-celular-captura-barra i {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #c8c2cc;
+}
+
+.demo-celular-captura-barra span {
+  width: 42%;
+  height: 5px;
+  margin-left: auto;
+  border-radius: 4px;
+  background: #dfdbe3;
+}
+
+.demo-celular-captura-site img {
+  height: calc(100% - 16px);
+}
+
+.demo-celular[data-demo='nexora'] { --demo-mobile-accent: #7040dc; }
+.demo-celular[data-demo='roteza'] { --demo-mobile-accent: #5d3fd3; }
+
+@media (max-width: 640px) {
+  .cartao-demonstracao,
+  .cabecalho-cartao-demonstracao,
+  .texto-cartao-demonstracao,
+  .acoes-demonstracao {
+    min-width: 0;
+  }
+
+  .cabecalho-cartao-demonstracao {
+    grid-template-columns: 40px minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .mini-icone-projeto {
+    width: 40px;
+    height: 40px;
+  }
+
+  .cabecalho-cartao-demonstracao h3,
+  .cabecalho-cartao-demonstracao p {
+    overflow-wrap: anywhere;
+  }
+
+  .acoes-demonstracao {
+    display: grid;
+    grid-template-columns: minmax(0, .88fr) minmax(0, 1.12fr);
+    gap: 8px;
+  }
+
+  .acoes-demonstracao button,
+  .acoes-demonstracao a {
+    width: 100%;
+    min-width: 0;
+    min-height: 42px;
+    padding-inline: 8px;
+    justify-content: center;
+    text-align: center;
+    font-size: .7rem;
+    line-height: 1.15;
+    white-space: normal;
+  }
+
+  .preview-simples .selo-preview,
+  .preview-simples .selo-telas-extra {
+    max-width: calc(50% - 12px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: .57rem;
+  }
+
+  .demo-celular-aparelho {
+    width: 100%;
+    max-width: 344px;
+  }
+}
+
+@media (max-width: 760px) {
+  .palco-galeria-modal.modo-desktop {
+    overflow-x: hidden !important;
+  }
+
+  .palco-galeria-modal.modo-desktop .demo-navegavel {
+    width: 100%;
+    min-width: 0 !important;
+  }
+
+  .palco-galeria-modal.modo-desktop .demo-header-real {
+    grid-template-columns: minmax(112px, auto) minmax(0, 1fr);
+  }
+
+  .palco-galeria-modal.modo-desktop .demo-header-nav {
+    min-width: 0;
+    overflow-x: auto;
+    justify-content: flex-start;
+    scrollbar-width: none;
+  }
+
+  .palco-galeria-modal.modo-desktop .demo-header-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .palco-galeria-modal.modo-desktop .demo-header-nav button {
+    flex: 0 0 auto;
+    padding-inline: 7px !important;
+    font-size: .54rem;
+  }
+
+  .palco-galeria-modal.modo-desktop .demo-marca strong {
+    max-width: 92px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 360px) {
+  .trilho-demonstracoes {
+    --largura-card-mobile: calc(100vw - 38px);
+    padding-inline: 12px;
+    scroll-padding-inline: 12px;
+  }
+
+  .cabecalho-cartao-demonstracao {
+    padding-inline: 14px;
+  }
+
+  .recursos-resumidos,
+  .acoes-demonstracao {
+    padding-inline: 13px;
+  }
+
+  .demo-celular-captura-sistema {
+    height: 116px;
+  }
+
+  .demo-celular-captura-site {
+    height: 140px;
+  }
+
+  .demo-celular-metricas article {
+    padding: 9px;
+  }
+}
+
+@media (min-width: 361px) and (max-width: 414px) {
+  .trilho-demonstracoes {
+    padding-inline: calc(50% - 41vw);
+    scroll-padding-inline: calc(50% - 41vw);
+  }
+}
+
+@media (max-height: 700px) and (max-width: 640px) {
+  .demo-celular-aparelho {
+    height: 480px;
+    min-height: 480px;
   }
 }
