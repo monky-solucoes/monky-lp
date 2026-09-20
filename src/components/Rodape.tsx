@@ -20,7 +20,12 @@ export default function Rodape() {
 
         <div className="contato-rodape">
           <h3>Contato</h3>
-          <a href={criarLinkContatoGenerico()} target="_blank" rel="noreferrer">
+          <a
+            href={criarLinkContatoGenerico()}
+            target="_blank"
+            rel="noreferrer"
+            data-analytics-origem="footer"
+          >
             Falar no WhatsApp
           </a>
           <a href={`mailto:${contato.email}`}>{contato.email}</a>

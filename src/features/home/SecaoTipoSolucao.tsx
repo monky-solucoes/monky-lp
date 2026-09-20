@@ -117,7 +117,13 @@ export default function SecaoTipoSolucao() {
             <h3>Conte o problema. A solução vem depois.</h3>
             <p>A gente entende como sua empresa trabalha e indica o formato que faz sentido, sem empurrar complexidade desnecessária.</p>
           </div>
-          <a className="botao botao-roxo" href={criarLinkContatoGenerico()} target="_blank" rel="noreferrer">
+          <a
+            className="botao botao-roxo"
+            href={criarLinkContatoGenerico()}
+            target="_blank"
+            rel="noreferrer"
+            data-analytics-origem="tipo_solucao_ajuda"
+          >
             Contar meu problema <Icone nome="seta" tamanho={17} />
           </a>
         </div>

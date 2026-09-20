@@ -32,7 +32,7 @@ export function registrarCliqueWhatsApp(
   origem: string,
   sistema = 'contato_geral',
 ) {
-  registrarEvento('clique_whatsapp', {
+  registrarEvento('whatsapp_click', {
     origem,
     sistema,
   })

@@ -15,6 +15,36 @@ function registrarEvento(nome: string, parametros: ParametrosAnalytics) {
   if (typeof gtag === 'function') {
     gtag('event', nome, parametros)
   }
+
+  const clarity = window.clarity
+
+  if (typeof clarity === 'function') {
+    clarity('event', nome)
+  }
+}
+
+function definirTagClarity(chave: string, valor: string) {
+  if (typeof window === 'undefined') {
+    return
+  }
+
+  const clarity = window.clarity
+
+  if (typeof clarity === 'function') {
+    clarity('set', chave, valor)
+  }
+}
+
+function priorizarSessaoClarity(motivo: string) {
+  if (typeof window === 'undefined') {
+    return
+  }
+
+  const clarity = window.clarity
+
+  if (typeof clarity === 'function') {
+    clarity('upgrade', motivo)
+  }
 }
 
 function registrarVisualizacaoPagina() {
@@ -48,9 +78,8 @@ export default function AnalyticsEventos() {
   /*
    * Escuta cliques nos links do site.
    *
-   * Isso permite medir automaticamente:
-   * - WhatsApp
-   * - eventos personalizados adicionados com data-analytics-*
+   * Para WhatsApp usamos um único evento: whatsapp_click.
+   * A origem identifica exatamente qual parte da landing page gerou o contato.
    */
   useEffect(() => {
     function registrarClique(evento: MouseEvent) {
@@ -73,18 +102,38 @@ export default function AnalyticsEventos() {
         endereco.includes('api.whatsapp.com') ||
         endereco.includes('whatsapp.com/send')
 
-      /*
-       * WhatsApp
-       */
       if (ehWhatsApp) {
-        registrarEvento('clique_whatsapp', {
-          origem: link.dataset.analyticsOrigem ?? 'site',
-          sistema:
-            link.dataset.analyticsSistema ?? 'contato_geral',
+        const origem = link.dataset.analyticsOrigem ?? 'whatsapp_sem_origem'
+        const sistema =
+          link.dataset.analyticsSistema ??
+          link.dataset.analyticsProjetoId ??
+          'contato_geral'
+
+        const parametros: ParametrosAnalytics = {
+          origem,
+          sistema,
           link_url: endereco,
           page_path: window.location.pathname,
           page_location: window.location.href,
-        })
+        }
+
+        const projetoId = link.dataset.analyticsProjetoId
+        const projetoNome = link.dataset.analyticsProjetoNome
+        const categoria = link.dataset.analyticsCategoria
+
+        if (projetoId) parametros.projeto_id = projetoId
+        if (projetoNome) parametros.projeto_nome = projetoNome
+        if (categoria) parametros.categoria = categoria
+
+        definirTagClarity('whatsapp_origem', origem)
+        definirTagClarity('whatsapp_sistema', sistema)
+
+        if (projetoId) {
+          definirTagClarity('whatsapp_projeto', projetoId)
+        }
+
+        registrarEvento('whatsapp_click', parametros)
+        priorizarSessaoClarity(`whatsapp ${origem}`)
       }
 
       /*
@@ -102,11 +151,11 @@ export default function AnalyticsEventos() {
       }
 
       /*
-       * Evita registrar clique_whatsapp duas vezes caso alguém
-       * coloque data-analytics-event="clique_whatsapp"
+       * Evita registrar whatsapp_click duas vezes caso alguém
+       * coloque data-analytics-event="whatsapp_click"
        * em um link que já é do WhatsApp.
        */
-      if (ehWhatsApp && nomeEvento === 'clique_whatsapp') {
+      if (ehWhatsApp && nomeEvento === 'whatsapp_click') {
         return
       }
 

@@ -39,6 +39,7 @@ export default function Cabecalho() {
           href={criarLinkContatoGenerico()}
           target="_blank"
           rel="noreferrer"
+          data-analytics-origem="header"
         >
           Falar com um especialista <span>→</span>
         </a>

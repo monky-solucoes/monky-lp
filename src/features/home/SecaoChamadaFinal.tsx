@@ -16,6 +16,7 @@ export default function SecaoChamadaFinal() {
             href={criarLinkContatoGenerico()}
             target="_blank"
             rel="noreferrer"
+            data-analytics-origem="cta_final"
           >
             Falar com um especialista <span>→</span>
           </a>
