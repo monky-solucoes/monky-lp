@@ -1,64 +1,137 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
-import { definirTagClarity, rastrearEvento } from '@/utils/analytics'
+import { useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 
-const marcasScroll = [25, 50, 75, 90]
+type ParametrosAnalytics = Record<string, string>
+
+function registrarEvento(nome: string, parametros: ParametrosAnalytics) {
+  if (typeof window === 'undefined') {
+    return
+  }
+
+  const gtag = window.gtag
+
+  if (typeof gtag === 'function') {
+    gtag('event', nome, parametros)
+  }
+}
+
+function registrarVisualizacaoPagina() {
+  if (typeof window === 'undefined') {
+    return
+  }
+
+  const gtag = window.gtag
+
+  if (typeof gtag === 'function') {
+    gtag('page_view', {
+      page_path: window.location.pathname,
+      page_location: window.location.href,
+    })
+  }
+}
 
 export default function AnalyticsEventos() {
-  const inicio = useRef<number>(0)
-  const marcasEnviadas = useRef(new Set<number>())
-  const tempoFinalEnviado = useRef(false)
+  const caminho = usePathname()
 
+  /*
+   * Registra a visualização sempre que a rota mudar.
+   *
+   * Como nossa landing page praticamente trabalha em uma única rota,
+   * normalmente será disparado apenas na entrada do usuário.
+   */
   useEffect(() => {
-    inicio.current = Date.now()
-    definirTagClarity('landing', 'monky')
+    registrarVisualizacaoPagina()
+  }, [caminho])
 
-    function enviarTempo(final = false) {
-      if (final && tempoFinalEnviado.current) return
-      if (final) tempoFinalEnviado.current = true
+  /*
+   * Escuta cliques nos links do site.
+   *
+   * Isso permite medir automaticamente:
+   * - WhatsApp
+   * - eventos personalizados adicionados com data-analytics-*
+   */
+  useEffect(() => {
+    function registrarClique(evento: MouseEvent) {
+      const alvo = evento.target
 
-      const segundos = Math.max(1, Math.round((Date.now() - inicio.current) / 1000))
+      if (!(alvo instanceof Element)) {
+        return
+      }
 
-      rastrearEvento(final ? 'tempo_na_pagina_final' : 'tempo_na_pagina', {
-        segundos,
-        transport_type: 'beacon',
+      const link = alvo.closest<HTMLAnchorElement>('a')
+
+      if (!link) {
+        return
+      }
+
+      const endereco = link.href
+
+      const ehWhatsApp =
+        endereco.includes('wa.me') ||
+        endereco.includes('api.whatsapp.com') ||
+        endereco.includes('whatsapp.com/send')
+
+      /*
+       * WhatsApp
+       */
+      if (ehWhatsApp) {
+        registrarEvento('clique_whatsapp', {
+          origem: link.dataset.analyticsOrigem ?? 'site',
+          sistema:
+            link.dataset.analyticsSistema ?? 'contato_geral',
+          link_url: endereco,
+          page_path: window.location.pathname,
+          page_location: window.location.href,
+        })
+      }
+
+      /*
+       * Evento personalizado.
+       *
+       * Exemplo:
+       *
+       * data-analytics-event="clique_interesse"
+       * data-analytics-label="Gestão de Oficina"
+       */
+      const nomeEvento = link.dataset.analyticsEvent
+
+      if (!nomeEvento) {
+        return
+      }
+
+      /*
+       * Evita registrar clique_whatsapp duas vezes caso alguém
+       * coloque data-analytics-event="clique_whatsapp"
+       * em um link que já é do WhatsApp.
+       */
+      if (ehWhatsApp && nomeEvento === 'clique_whatsapp') {
+        return
+      }
+
+      registrarEvento(nomeEvento, {
+        rotulo:
+          link.dataset.analyticsLabel?.trim() ||
+          link.textContent?.trim() ||
+          'sem_rotulo',
+
+        origem:
+          link.dataset.analyticsOrigem ?? 'site',
+
+        sistema:
+          link.dataset.analyticsSistema ?? 'nao_informado',
+
+        link_url: endereco,
+
+        page_path: window.location.pathname,
       })
     }
 
-    function medirScroll() {
-      const documento = document.documentElement
-      const areaRolavel = documento.scrollHeight - window.innerHeight
-      if (areaRolavel <= 0) return
-
-      const percentual = Math.round((window.scrollY / areaRolavel) * 100)
-      const marca = marcasScroll.find((valor) => percentual >= valor && !marcasEnviadas.current.has(valor))
-
-      if (!marca) return
-
-      marcasEnviadas.current.add(marca)
-      rastrearEvento('scroll_depth', {
-        percentual: marca,
-      })
-    }
-
-    function aoMudarVisibilidade() {
-      if (document.visibilityState === 'hidden') enviarTempo()
-    }
-
-    function aoSairDaPagina() {
-      enviarTempo(true)
-    }
-
-    window.addEventListener('scroll', medirScroll, { passive: true })
-    document.addEventListener('visibilitychange', aoMudarVisibilidade)
-    window.addEventListener('pagehide', aoSairDaPagina)
+    document.addEventListener('click', registrarClique)
 
     return () => {
-      window.removeEventListener('scroll', medirScroll)
-      document.removeEventListener('visibilitychange', aoMudarVisibilidade)
-      window.removeEventListener('pagehide', aoSairDaPagina)
-      enviarTempo(true)
+      document.removeEventListener('click', registrarClique)
     }
   }, [])
 
