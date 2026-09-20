@@ -1,6 +1,6 @@
 import Script from 'next/script'
 
-const gaId = 'G-KX712S1X44'
+const gaId = 'G-97GGFKQWQ0'
 const clarityId = 'ylee9lzj5e'
 
 export default function AnalyticsScripts() {
