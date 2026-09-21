@@ -8,6 +8,7 @@ export default function BotaoWhatsAppFlutuante() {
       target="_blank"
       rel="noreferrer"
       aria-label="Falar com a Monky no WhatsApp"
+      data-analytics-origem="whatsapp_flutuante"
     >
       <span className="whatsapp-flutuante-tooltip" aria-hidden="true">Fale com a gente</span>
       <span className="whatsapp-flutuante-icone" aria-hidden="true">

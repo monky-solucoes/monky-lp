@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import FundoInterativoHero from '@/components/FundoInterativoHero'
-import { rastrearCliqueWhatsApp, rastrearEvento } from '@/utils/analytics'
+import { rastrearEvento } from '@/utils/analytics'
 import { criarLinkContatoGenerico } from '@/utils/whatsapp'
 
 export default function SecaoHero() {
@@ -38,7 +38,7 @@ export default function SecaoHero() {
               href={criarLinkContatoGenerico()}
               target="_blank"
               rel="noreferrer"
-              onClick={() => rastrearCliqueWhatsApp('hero')}
+              data-analytics-origem="hero"
             >
               Falar com a Monky
             </a>

@@ -7,7 +7,7 @@ import Icone, { type NomeIcone } from '@/components/Icone'
 import Revelar from '@/components/Revelar'
 import { demonstracoes } from '@/data/demonstracoes'
 import type { Demonstracao } from '@/types/demonstracao'
-import { definirTagClarity, rastrearCliqueWhatsApp, rastrearEvento } from '@/utils/analytics'
+import { definirTagClarity, rastrearEvento } from '@/utils/analytics'
 import { criarLinkWhatsApp } from '@/utils/whatsapp'
 import TelaInternaDemonstracao from './TelaInternaDemonstracao'
 import FundoInterativoCases from './FundoInterativoCases'
@@ -252,14 +252,6 @@ export default function SecaoDemonstracoes() {
     })
   }
 
-  function abrirWhatsAppProjeto(demonstracao: Demonstracao, origem = 'card_whatsapp') {
-    rastrearCliqueWhatsApp(origem, {
-      id: demonstracao.id,
-      nome: demonstracao.nome,
-      categoria: demonstracao.categoria,
-    })
-    window.open(criarLinkWhatsApp(demonstracao.mensagemWhatsApp), '_blank', 'noopener,noreferrer')
-  }
 
   function navegarTelaDemonstracao(indice: number) {
     definirTelaAtiva(indice)
@@ -361,14 +353,12 @@ export default function SecaoDemonstracoes() {
                       href={criarLinkWhatsApp(demonstracao.mensagemWhatsApp)}
                       target="_blank"
                       rel="noreferrer"
-                      onClick={(evento) => {
-                        evento.stopPropagation()
-                        rastrearCliqueWhatsApp('card_cta', {
-                          id: demonstracao.id,
-                          nome: demonstracao.nome,
-                          categoria: demonstracao.categoria,
-                        })
-                      }}
+                      data-analytics-origem="card_cta"
+                      data-analytics-sistema={demonstracao.id}
+                      data-analytics-projeto-id={demonstracao.id}
+                      data-analytics-projeto-nome={demonstracao.nome}
+                      data-analytics-categoria={demonstracao.categoria}
+                      onClick={(evento) => evento.stopPropagation()}
                     >
                       Quero algo assim <Icone nome="seta" tamanho={15} />
                     </a>
@@ -497,11 +487,11 @@ export default function SecaoDemonstracoes() {
                   href={criarLinkWhatsApp(demonstracaoAberta.mensagemWhatsApp)}
                   target="_blank"
                   rel="noreferrer"
-                  onClick={() => rastrearCliqueWhatsApp('modal_cta', {
-                    id: demonstracaoAberta.id,
-                    nome: demonstracaoAberta.nome,
-                    categoria: demonstracaoAberta.categoria,
-                  })}
+                  data-analytics-origem="modal_cta"
+                  data-analytics-sistema={demonstracaoAberta.id}
+                  data-analytics-projeto-id={demonstracaoAberta.id}
+                  data-analytics-projeto-nome={demonstracaoAberta.nome}
+                  data-analytics-categoria={demonstracaoAberta.categoria}
                 >
                   <span className="cta-desktop">Quero conversar sobre isso</span>
                   <span className="cta-mobile">Conversar sobre isso</span>

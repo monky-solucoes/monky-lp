@@ -47,10 +47,13 @@ export function rastrearCliqueWhatsApp(origem: string, projeto?: {
     categoria: projeto?.categoria,
   }
 
-  rastrearEvento('whatsapp_click', parametros)
+  definirTagClarity('whatsapp_origem', origem)
+  definirTagClarity('whatsapp_sistema', projeto?.id ?? 'contato_geral')
 
   if (projeto) {
     definirTagClarity('whatsapp_projeto', projeto.id)
-    priorizarSessaoClarity(`whatsapp ${projeto.id}`)
   }
+
+  rastrearEvento('whatsapp_click', parametros)
+  priorizarSessaoClarity(`whatsapp ${origem}`)
 }
