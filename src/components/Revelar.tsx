@@ -7,12 +7,16 @@ interface PropriedadesRevelar {
   children: ReactNode
   atraso?: number
   className?: string
+  ariaHidden?: boolean
+  inert?: boolean
 }
 
 export default function Revelar({
   children,
   atraso = 0,
   className = '',
+  ariaHidden,
+  inert,
 }: PropriedadesRevelar) {
   const referencia = useRef<HTMLDivElement | null>(null)
   const [visivel, definirVisivel] = useState(false)
@@ -54,6 +58,8 @@ export default function Revelar({
       ref={referencia}
       className={`revelar ${visivel ? 'revelar-visivel' : ''} ${className}`.trim()}
       style={estilo}
+      aria-hidden={ariaHidden}
+      inert={inert || undefined}
     >
       {children}
     </div>

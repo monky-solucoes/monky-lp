@@ -346,6 +346,8 @@ export default function TelaInternaDemonstracao({
           key={pagina.imagem}
           className="demo-screen-img"
           src={pagina.imagem}
+          width={1600}
+          height={1000}
           alt={`${pagina.titulo} do projeto ${demonstracao.nome}`}
         />
       </div>

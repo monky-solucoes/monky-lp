@@ -1,6 +1,9 @@
 import type { Metadata, Viewport } from 'next'
 import AnalyticsEventos from '@/components/AnalyticsEventos'
 import AnalyticsScripts from '@/components/AnalyticsScripts'
+import Cabecalho from '@/components/Cabecalho'
+import Rodape from '@/components/Rodape'
+import BotaoWhatsAppFlutuante from '@/features/home/BotaoWhatsAppFlutuante'
 import '../styles/globals.css'
 
 export const metadata: Metadata = {
@@ -67,11 +70,6 @@ export const metadata: Metadata = {
     },
   },
 
-  icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon.ico',
-    apple: '/apple-touch-icon.png',
-  },
 }
 
 export const viewport: Viewport = {
@@ -94,7 +92,11 @@ export default function LayoutRaiz({
         <AnalyticsScripts />
         <AnalyticsEventos />
 
-        {children}
+        <a className="pular-conteudo" href="#conteudo">Pular para o conteúdo</a>
+        <Cabecalho />
+        <main id="conteudo" tabIndex={-1}>{children}</main>
+        <Rodape />
+        <BotaoWhatsAppFlutuante />
       </body>
     </html>
   )
