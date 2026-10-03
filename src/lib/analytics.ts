@@ -10,7 +10,14 @@ export function registrarEvento(
     return
   }
 
-  window.gtag?.('event', nome, parametros)
+  if (!window.gtag) {
+    window.dataLayer = window.dataLayer || []
+    window.gtag = function () {
+      // Keep the gtag queue format until the asynchronous GA script is ready.
+      window.dataLayer!.push(arguments)
+    }
+  }
+  window.gtag('event', nome, parametros)
 }
 
 export function registrarVisualizacaoPagina() {

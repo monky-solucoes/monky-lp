@@ -5,7 +5,8 @@ function somenteNumeros(valor: string) {
 }
 
 export function criarLinkWhatsApp(mensagem: string) {
-  const numero = somenteNumeros(contato.numeroWhatsApp)
+  const numeroLocal = somenteNumeros(contato.numeroWhatsApp)
+  const numero = numeroLocal.length === 10 || numeroLocal.length === 11 ? `55${numeroLocal}` : numeroLocal
   const texto = encodeURIComponent(mensagem)
 
   if (!numero) {
