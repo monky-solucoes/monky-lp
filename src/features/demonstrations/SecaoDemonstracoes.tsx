@@ -76,10 +76,6 @@ return (
           {visiveis.map((projeto) => (
             <article className={`cartao-projeto projeto-${projeto.id}`} key={projeto.id}>
               <div className="cartao-topo">
-                <div className="cartao-meta">
-                  <span className="icone-projeto"><Icone nome={projeto.fluxo ? 'raio' : idsSistemas.has(projeto.id) ? 'codigo' : 'site'} tamanho={20} aria-hidden="true" /></span>
-                  <span className="categoria-projeto">{projeto.categoria}</span>
-                </div>
                 <h3 className="projeto-nome">{projeto.nome}</h3>
                 <p className="projeto-descricao">{projeto.resumo}</p>
               </div>

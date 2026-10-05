@@ -1,13 +1,40 @@
+'use client'
+
 import Icone from '@/components/Icone'
 import Link from 'next/link'
 import Image from 'next/image'
 
 const etapas = [
-  { nome: 'Você conta o problema', descricao: 'Você explica sua rotina, dificuldade ou ideia. Pode trazer uma planilha, uma mensagem ou simplesmente contar como faz hoje.', resultado: 'Um ponto de partida claro', detalhe: 'O que acontece, quem participa e onde está a dificuldade.' },
-  { nome: 'A gente entende', descricao: 'Olhamos para o caminho completo: de onde a informação vem, por onde passa e o que precisa acontecer depois.', resultado: 'A rotina mapeada', detalhe: 'Prioridades, regras e ferramentas que precisam conversar.' },
-  { nome: 'Propomos o essencial', descricao: 'Definimos juntos o que entra na primeira versão. Você entende o escopo antes de o desenvolvimento começar.', resultado: 'Um escopo combinado', detalhe: 'O que vamos construir, o que fica para depois e os próximos passos.' },
-  { nome: 'Desenvolvemos', descricao: 'A ideia ganha forma em telas e fluxos. Validamos com você para que a solução faça sentido na prática.', resultado: 'Uma solução para testar', detalhe: 'Você acompanha, experimenta e ajuda a ajustar os detalhes.' },
-  { nome: 'Evoluímos', descricao: 'Depois de colocar em uso, novas necessidades podem virar melhorias. Cada próximo passo é avaliado e combinado.', resultado: 'Espaço para crescer', detalhe: 'Melhorias e novos módulos conforme a operação precisar.' },
+  {
+    numero: '01',
+    titulo: 'Você conta o problema',
+    descricao: 'Explique sua rotina, dificuldade ou ideia.'
+  },
+  {
+    numero: '02',
+    titulo: 'A gente entende',
+    descricao: 'Mapeamos o que acontece hoje e onde está o problema.'
+  },
+  {
+    numero: '03',
+    titulo: 'Definimos o essencial',
+    descricao: 'Combinamos o que entra na primeira versão.'
+  },
+  {
+    numero: '04',
+    titulo: 'Desenvolvemos',
+    descricao: 'Transformamos a ideia em telas e fluxos.'
+  },
+  {
+    numero: '05',
+    titulo: 'Você testa',
+    descricao: 'Você valida a solução antes da entrega final.'
+  },
+  {
+    numero: '06',
+    titulo: 'Ajustamos e colocamos no ar',
+    descricao: 'Refinamos detalhes e entregamos pronta para uso.'
+  },
 ]
 
 export default function SecaoComoFunciona() {
@@ -28,20 +55,34 @@ export default function SecaoComoFunciona() {
         </div>
       </section>
       <section className="secao secao-processo" id="etapas" aria-labelledby="titulo-processo">
-      <div className="container">
-        <div className="cabecalho-secao"><h2 id="titulo-processo">Do primeiro contato ao uso no dia a dia.</h2><p>Cada etapa tem um propósito. E uma próxima decisão bem definida.</p></div>
-        <ol className="lista-processo processo-detalhado">
-          {etapas.map((etapa, indice) => (
-            <li key={etapa.nome}>
-              <span className="numero-etapa" aria-hidden="true">{String(indice + 1).padStart(2, '0')}</span>
-              <div className="explicacao-etapa"><h3>{etapa.nome}</h3><p>{etapa.descricao}</p></div>
-              <div className="resultado-etapa"><Icone nome="check" tamanho={18} /><div><strong>{etapa.resultado}</strong><p>{etapa.detalhe}</p></div></div>
-            </li>
-          ))}
-        </ol>
-        <div className="ponte-processo"><p>Quer visualizar o que pode sair dessa conversa?</p><Link className="link-seta" href="/projetos">Explore os projetos e automações <Icone nome="seta" tamanho={18} /></Link></div>
-      </div>
-    </section>
+        <div className="container">
+          <div className="cabecalho-secao">
+            <h2 id="titulo-processo">Do primeiro contato ao uso no dia a dia.</h2>
+            <p>Cada etapa tem um propósito. E uma próxima decisão bem definida.</p>
+          </div>
+          <div className="passo-a-passo">
+            <div className="passo-linha" aria-hidden="true"></div>
+            <ol className="passo-lista">
+              {etapas.map((etapa, indice) => (
+                <li key={etapa.numero} className="passo-item">
+                  <div className="passo-conteudo">
+                    <span className="passo-numero" aria-hidden="true">{etapa.numero}</span>
+                    <div className="passo-texto">
+                      <h3>{etapa.titulo}</h3>
+                      <p>{etapa.descricao}</p>
+                    </div>
+                  </div>
+                  {indice < etapas.length - 1 && <span className="passo-conector" aria-hidden="true" />}
+                </li>
+              ))}
+            </ol>
+          </div>
+          <div className="ponte-processo">
+            <p>Quer visualizar o que pode sair dessa conversa?</p>
+            <Link className="link-seta" href="/projetos">Explore os projetos e automações <Icone nome="seta" tamanho={18} /></Link>
+          </div>
+        </div>
+      </section>
     </>
   )
 }
