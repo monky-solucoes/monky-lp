@@ -4,6 +4,7 @@ import AnalyticsScripts from '@/components/AnalyticsScripts'
 import Cabecalho from '@/components/Cabecalho'
 import Rodape from '@/components/Rodape'
 import BotaoWhatsAppFlutuante from '@/features/home/BotaoWhatsAppFlutuante'
+import { StructuredDataLocalBusiness } from '@/components/StructuredData'
 import '../styles/globals.css'
 
 export const metadata: Metadata = {
@@ -69,7 +70,6 @@ export const metadata: Metadata = {
       'max-video-preview': -1,
     },
   },
-
 }
 
 export const viewport: Viewport = {
@@ -88,6 +88,9 @@ export default function LayoutRaiz({
 }: Readonly<PropriedadesLayout>) {
   return (
     <html lang="pt-BR">
+      <head>
+        <StructuredDataLocalBusiness />
+      </head>
       <body>
         <AnalyticsScripts />
         <AnalyticsEventos />

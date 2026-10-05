@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'react'
 import Logo from './Logo'
 import { navegacao } from '@/data/navegacao'
 import { registrarCliqueMenu } from '@/lib/analytics'
-import { criarLinkContatoGenerico } from '@/utils/whatsapp'
+import { criarLinkHero } from '@/utils/whatsapp'
 
 export default function Cabecalho() {
   const caminho = usePathname()
@@ -55,10 +55,10 @@ export default function Cabecalho() {
               {link.nome}
             </Link>
           ))}
-          <a className="botao botao-roxo contato-mobile" href={criarLinkContatoGenerico()}
+          <a className="botao botao-roxo contato-mobile" href={criarLinkHero()}
             target="_blank" rel="noreferrer" data-analytics-origem="header_mobile">Falar com a Monky</a>
         </nav>
-        <a className="botao botao-roxo contato-desktop" href={criarLinkContatoGenerico()}
+        <a className="botao botao-roxo contato-desktop" href={criarLinkHero()}
           target="_blank" rel="noreferrer" data-analytics-origem="header">Falar com a Monky</a>
       </div>
     </header>

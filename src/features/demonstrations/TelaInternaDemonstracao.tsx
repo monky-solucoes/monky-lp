@@ -337,6 +337,29 @@ export default function TelaInternaDemonstracao({
       className="demo-navegavel demo-desktop-somente-imagem"
       data-demo={demonstracao.id}
     >
+      <header className="demo-desktop-header" role="banner">
+        <div className="demo-desktop-header-esquerda">
+          <button type="button" onClick={() => navegar(0)} aria-label={`Início de ${demonstracao.nome}`} className="demo-desktop-logo">
+            <span>{demonstracao.nome.charAt(0)}</span>
+            <strong>{demonstracao.nome}</strong>
+          </button>
+          <span className="demo-desktop-separador" aria-hidden="true">/</span>
+          <span className="demo-desktop-tela">{pagina.titulo}</span>
+        </div>
+        <nav className="demo-desktop-abas" aria-label={`Telas de ${demonstracao.nome}`}>
+          {paginas.map((item, indice) => (
+            <button
+              key={`desktop-${item.id}-${indice}`}
+              type="button"
+              className={indice === indiceSeguro ? 'ativo' : ''}
+              onClick={() => navegar(indice)}
+              aria-current={indice === indiceSeguro ? 'page' : undefined}
+            >
+              {item.titulo}
+            </button>
+          ))}
+        </nav>
+      </header>
       <div
         className="demo-viewport"
         tabIndex={0}

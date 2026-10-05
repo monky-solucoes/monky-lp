@@ -22,7 +22,7 @@ export default function SecaoComoFunciona() {
             <a className="link-seta" href="#etapas">Conheça o caminho <Icone nome="seta" tamanho={18} /></a>
           </div>
           <figure className="foto-conversa">
-            <Image src="/images/conversa-monky.png" alt="Cena ilustrativa de uma pessoa sorrindo durante uma conversa de trabalho com notebook." fill priority sizes="(max-width: 700px) calc(100vw - 40px), 520px" />
+            <Image src="/images/conversa-monky.webp" alt="Cena ilustrativa de uma pessoa sorrindo durante uma conversa de trabalho com notebook." fill priority sizes="(max-width: 700px) calc(100vw - 40px), 520px" />
             <figcaption><h2>Uma conversa<br />de cada vez.</h2><p>Espaço para ouvir, entender e construir juntos.</p></figcaption>
           </figure>
         </div>

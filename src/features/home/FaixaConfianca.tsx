@@ -1,4 +1,17 @@
 import Icone from '@/components/Icone'
+import { demonstracoes } from '@/data/demonstracoes'
+import { automacoes } from '@/data/automacoes'
+
+const setores = [
+  { icone: 'escudo' as const, nome: 'Saúde e Beleza' },
+  { icone: 'carro' as const, nome: 'Automotivo' },
+  { icone: 'mercado' as const, nome: 'E-commerce e Varejo' },
+  { icone: 'oficina' as const, nome: 'Serviços e Oficinas' },
+  { icone: 'camadas' as const, nome: 'Imobiliário e Construção' },
+  { icone: 'codigo' as const, nome: 'Tecnologia e SaaS' },
+]
+
+const totalProjetos = demonstracoes.length + automacoes.length
 
 const pontosConfianca = [
   {
@@ -33,6 +46,22 @@ export default function FaixaConfianca() {
             </div>
           </article>
         ))}
+      </div>
+      <div className="prova-social" aria-label="Setores atendidos e projetos">
+        <div className="container">
+          <div className="prova-social-numeros">
+            <strong>{totalProjetos}+</strong>
+            <span>projetos conceituais</span>
+          </div>
+          <div className="prova-social-setores">
+            <span className="setores-label">Atendemos:</span>
+            <ul className="lista-setores">
+              {setores.map((setor) => (
+                <li key={setor.nome}><Icone nome={setor.icone} tamanho={16} aria-hidden="true" />{setor.nome}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
       </div>
     </section>
   )

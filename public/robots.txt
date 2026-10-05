@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://monky-lp-zeta.vercel.app
+
+# Sitemaps
+Sitemap: https://monky-lp-zeta.vercel.app/sitemap.xml

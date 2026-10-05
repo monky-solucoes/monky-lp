@@ -2,7 +2,7 @@ import Link from 'next/link'
 import Logo from './Logo'
 import { contato } from '@/data/contato'
 import { navegacao } from '@/data/navegacao'
-import { criarLinkContatoGenerico } from '@/utils/whatsapp'
+import { criarLinkHero } from '@/utils/whatsapp'
 
 export default function Rodape() {
   return (
@@ -19,7 +19,7 @@ export default function Rodape() {
         </nav>
         <div className="contato-rodape">
           <h2>Vamos conversar</h2>
-          <a href={criarLinkContatoGenerico()} target="_blank" rel="noreferrer" data-analytics-origem="footer">Falar com a Monky</a>
+          <a href={criarLinkHero()} target="_blank" rel="noreferrer" data-analytics-origem="footer">Falar com a Monky</a>
           <a href={`mailto:${contato.email}`}>{contato.email}</a>
           <span>{contato.cidade}</span>
         </div>

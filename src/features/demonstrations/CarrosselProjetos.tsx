@@ -138,7 +138,6 @@ export default function CarrosselProjetos({ nomes, children }: { nomes: string[]
 
   return (
     <div className="carrossel-projetos" role="region" aria-roledescription="carrossel" aria-label="Projetos de exemplo">
-      <p className="dica-carrossel">Deslize para explorar os projetos <Icone nome="seta" tamanho={17} aria-hidden="true" /></p>
       <div className="trilho-projetos" id={id} ref={trilhoRef}>
         {[0, 1, 2].flatMap(copia => children.map((cartao, indice) => (
           <div className="slide-projeto" key={`${copia}-${indice}`} role="group" aria-roledescription="slide"
@@ -148,9 +147,15 @@ export default function CarrosselProjetos({ nomes, children }: { nomes: string[]
         )))}
       </div>
       <div className="controles-carrossel" role="group" aria-label="Navegar pelos projetos">
-        <button type="button" aria-label="Projeto anterior" aria-controls={id} onClick={() => navegarRef.current(-1)}><Icone nome="seta" tamanho={20} aria-hidden="true" /></button>
+        <button className="seta-carrossel seta-carrossel-anterior" type="button" aria-label="Projeto anterior" aria-controls={id} onClick={() => navegarRef.current(-1)}><Icone nome="seta" tamanho={20} aria-hidden="true" /></button>
         <div className="posicao-carrossel"><span>{ativo + 1} de {total}</span><strong>{nomes[ativo]}</strong></div>
-        <button type="button" aria-label="Próximo projeto" aria-controls={id} onClick={() => navegarRef.current(1)}><Icone nome="seta" tamanho={20} aria-hidden="true" /></button>
+        <button className="seta-carrossel seta-carrossel-proximo" type="button" aria-label="Próximo projeto" aria-controls={id} onClick={() => navegarRef.current(1)}><Icone nome="seta" tamanho={20} aria-hidden="true" /></button>
+        <div className="pontos-carrossel" role="group" aria-label="Escolher projeto">
+          {nomes.map((nome, indice) => (
+            <button key={nome} type="button" aria-label={`Ir para ${nome}`} aria-current={ativo === indice ? 'true' : undefined}
+              aria-controls={id} onClick={() => navegarRef.current(indice - ativo)} />
+          ))}
+        </div>
         <button className="pausa-carrossel" type="button" aria-pressed={pausado} onClick={() => definirPausado(!pausado)}>{pausado ? 'Retomar' : 'Pausar'}</button>
       </div>
     </div>

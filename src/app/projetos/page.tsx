@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function PaginaProjetos() {
   return (
     <>
-      <HeroInterno titulo="Projetos e possibilidades" texto="Alguns exemplos de soluções que mostram como diferentes negócios podem usar tecnologia de forma simples." />
+      <HeroInterno titulo="Projetos e possibilidades" texto="Alguns exemplos de soluções que mostram como diferentes negócios podem usar tecnologia de forma simples." className="hero-interno--com-banner" style={{ '--banner-img': 'url(/images/12d26e3d-1db3-4b48-866f-1ab349695352.png)' } as React.CSSProperties} />
       <SecaoDemonstracoes />
       <SecaoChamadaFinal />
     </>

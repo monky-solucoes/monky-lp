@@ -227,7 +227,7 @@ Cartões de solução usam ícone branco em superfície roxa, borda de marca e p
 
 Os cartões de solução incluem uma área “Na prática”, separada por borda superior, com dois exemplos e ícones de confirmação. O espaço superior é de (24px), com preenchimento de (18px) após a divisória; itens usam (.82rem) e entrelinha (1.5).
 
-Cartões de projeto mantêm a imagem ou painel compacto de automação acima do texto, com conteúdo interno de (24px) e ações abaixo. O título, resumo, categoria e identificação como exemplo permanecem legíveis. Não há estado de hover ou foco no cartão estático; as ações internas recebem esses estados.
+Cartões de projeto mantêm a imagem ou painel compacto de automação acima do texto, com conteúdo interno de (24px) e ações abaixo. O título, resumo, categoria e identificação como exemplo permanecem legíveis. A trilha do carrossel ocupa toda a largura da janela, permitindo que os cartões vizinhos saiam pelas laterais enquanto o conteúdo editorial continua alinhado ao contêiner. Não há estado de hover ou foco no cartão estático; as ações internas recebem esses estados.
 
 ### Navigation
 

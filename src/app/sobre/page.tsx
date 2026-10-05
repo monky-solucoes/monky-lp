@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import SecaoSobre from '@/features/home/SecaoSobre'
 import SecaoChamadaFinal from '@/features/home/SecaoChamadaFinal'
+import { criarLinkSobre } from '@/utils/whatsapp'
 
 export const metadata: Metadata = {
   title: 'Sobre',
@@ -11,7 +12,7 @@ export default function PaginaSobre() {
   return (
     <>
       <SecaoSobre />
-      <SecaoChamadaFinal />
+      <SecaoChamadaFinal link={criarLinkSobre()} />
     </>
   )
 }

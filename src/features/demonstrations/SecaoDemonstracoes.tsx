@@ -43,41 +43,63 @@ export default function SecaoDemonstracoes({ destaque = false }: { destaque?: bo
     acionadorRef.current?.focus()
   }
 
-  return (
+return (
     <section className={`secao secao-projetos ${destaque ? 'projetos-destaque' : ''}`} aria-label={destaque ? 'Alguns projetos' : 'Catálogo de projetos'}>
       <div className="container">
-        {destaque && <div className="cabecalho-secao"><h2>Alguns projetos</h2><p>Exemplos do que podemos construir para diferentes rotinas.</p></div>}
-        <p className="nota-projetos">Projetos conceituais e demonstrações. Cada solução é adaptada à rotina da sua empresa.</p>
-        {!destaque && (
-          <div className="barra-filtros">
-            <div className="filtros-projetos" role="group" aria-label="Filtrar projetos">
-              {filtros.map((item) => <button key={item} type="button" aria-pressed={filtro === item}
-                onClick={() => definirFiltro(item)}>{item}</button>)}
+        {destaque && (
+          <header className="cabecalho-secao projetos-header">
+            <div className="projetos-header-texto">
+              <h2>Alguns projetos</h2>
+              <p className="projetos-subtitulo">Exemplos do que podemos construir para diferentes rotinas.</p>
             </div>
-            <span role="status" className="contagem-projetos">{visiveis.length} exemplos</span>
-          </div>
+            <p className="projetos-nota-complementar">Projetos conceituais e demonstrações. Cada solução é adaptada à rotina da sua empresa.</p>
+          </header>
+        )}
+        {!destaque && (
+          <>
+            <header className="cabecalho-secao projetos-header">
+              <div className="projetos-header-texto">
+                <h2>Explore por categoria</h2>
+                <p className="projetos-subtitulo">Encontre exemplos de sistemas, sites e automações para diferentes necessidades.</p>
+              </div>
+            </header>
+            <div className="barra-filtros">
+              <div className="filtros-projetos" role="group" aria-label="Filtrar projetos">
+                {filtros.map((item) => <button key={item} type="button" aria-pressed={filtro === item}
+                  onClick={() => definirFiltro(item)}>{item}</button>)}
+              </div>
+              <span role="status" className="contagem-projetos">{visiveis.length} exemplos</span>
+            </div>
+          </>
         )}
         <CarrosselProjetos key={filtro} nomes={visiveis.map(projeto => projeto.nome)}>
           {visiveis.map((projeto) => (
             <article className={`cartao-projeto projeto-${projeto.id}`} key={projeto.id}>
-              <div className="cabecalho-projeto">
-                <span className="icone-projeto"><Icone nome={projeto.fluxo ? 'raio' : idsSistemas.has(projeto.id) ? 'codigo' : 'site'} tamanho={22} aria-hidden="true" /></span>
-                <span className="categoria-projeto">{projeto.categoria}</span>
-                {destaque ? <h3>{projeto.nome}</h3> : <h2>{projeto.nome}</h2>}
-                <p>{projeto.resumo}</p>
-              </div>
-              <button type="button" className="abrir-preview" aria-label={`Explorar ${projeto.nome}`} aria-haspopup="dialog" onClick={(evento) => abrir(projeto, evento.currentTarget)}>
-              {projeto.fluxo ? (
-                <div className="preview-automacao" aria-hidden="true"><PainelAutomacao id={projeto.id} compacto /></div>
-              ) : (
-                <div className="imagem-projeto">
-                  <Image src={projeto.imagem} alt={`Prévia do projeto ${projeto.nome}`} width={1586} height={992}
-                    sizes="(max-width: 700px) 78vw, (max-width: 960px) 76vw, 720px" />
+              <div className="cartao-topo">
+                <div className="cartao-meta">
+                  <span className="icone-projeto"><Icone nome={projeto.fluxo ? 'raio' : idsSistemas.has(projeto.id) ? 'codigo' : 'site'} tamanho={20} aria-hidden="true" /></span>
+                  <span className="categoria-projeto">{projeto.categoria}</span>
                 </div>
-              )}
-              <span className="selo-explorar"><Icone nome="olho" tamanho={16} aria-hidden="true" /> Explorar produto</span>
-              </button>
-              <div className="conteudo-projeto">
+                <h3 className="projeto-nome">{projeto.nome}</h3>
+                <p className="projeto-descricao">{projeto.resumo}</p>
+              </div>
+              <div className="cartao-imagem-wrapper">
+                <button type="button" className="abrir-preview" aria-label={`Explorar ${projeto.nome}`} aria-haspopup="dialog" onClick={(evento) => abrir(projeto, evento.currentTarget)}>
+                  {projeto.fluxo ? (
+                    <div className="preview-automacao" aria-hidden="true"><PainelAutomacao id={projeto.id} compacto /></div>
+                  ) : (
+                    <div className="imagem-projeto">
+                      <Image src={projeto.imagem} alt={`Prévia do projeto ${projeto.nome}`} width={1586} height={992}
+                        sizes="(max-width: 700px) 82vw, (max-width: 960px) 68vw, 440px" />
+                    </div>
+                  )}
+                </button>
+                <button type="button" className="btn-explorar" aria-label={`Explorar demonstração de ${projeto.nome}`} onClick={(evento) => { evento.stopPropagation(); abrir(projeto, evento.currentTarget); }}>
+                  <Icone nome="olho" tamanho={16} aria-hidden="true" />
+                  <span>Explorar produto</span>
+                </button>
+              </div>
+              <div className="cartao-base">
                 <ul className="recursos-projeto">{projeto.recursos.slice(0, 2).map(recurso => <li key={recurso}><Icone nome="check" tamanho={14} aria-hidden="true" />{recurso}</li>)}</ul>
                 <div className="acoes-projeto">
                   <a className="botao botao-roxo" href={criarLinkWhatsApp(projeto.mensagemWhatsApp)}
@@ -86,7 +108,7 @@ export default function SecaoDemonstracoes({ destaque = false }: { destaque?: bo
                     data-analytics-projeto-nome={projeto.nome} data-analytics-categoria={projeto.categoria}>
                     Quero algo parecido <Icone nome="seta" tamanho={16} aria-hidden="true" />
                   </a>
-                  <button type="button" className="botao botao-demo" aria-haspopup="dialog"
+                  <button type="button" className="botao botao-secundario" aria-haspopup="dialog"
                     onClick={(evento) => abrir(projeto, evento.currentTarget)}>
                     Ver demonstração <Icone nome="olho" tamanho={17} aria-hidden="true" />
                   </button>
