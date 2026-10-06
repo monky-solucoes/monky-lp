@@ -43,16 +43,16 @@ export default function SecaoDemonstracoes({ destaque = false }: { destaque?: bo
     acionadorRef.current?.focus()
   }
 
-return (
+  return (
     <section className={`secao secao-projetos ${destaque ? 'projetos-destaque' : ''}`} aria-label={destaque ? 'Alguns projetos' : 'Catálogo de projetos'}>
       <div className="container">
         {destaque && (
           <header className="cabecalho-secao projetos-header">
             <div className="projetos-header-texto">
               <h2>Alguns projetos</h2>
-              <p className="projetos-subtitulo">Exemplos do que podemos construir para diferentes rotinas.</p>
+              <p className="projetos-subtitulo">Exemplos de sistemas, sites e automações que podemos adaptar à rotina da sua empresa.
+              </p>
             </div>
-            <p className="projetos-nota-complementar">Projetos conceituais e demonstrações. Cada solução é adaptada à rotina da sua empresa.</p>
           </header>
         )}
         {!destaque && (
@@ -60,7 +60,8 @@ return (
             <header className="cabecalho-secao projetos-header">
               <div className="projetos-header-texto">
                 <h2>Explore por categoria</h2>
-                <p className="projetos-subtitulo">Encontre exemplos de sistemas, sites e automações para diferentes necessidades.</p>
+                <p className="projetos-subtitulo">Exemplos de sistemas, sites e automações que podemos adaptar à rotina da sua empresa.
+              </p>
               </div>
             </header>
             <div className="barra-filtros">

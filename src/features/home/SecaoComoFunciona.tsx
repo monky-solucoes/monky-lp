@@ -56,30 +56,26 @@ export default function SecaoComoFunciona() {
       </section>
       <section className="secao secao-processo" id="etapas" aria-labelledby="titulo-processo">
         <div className="container">
-          <div className="cabecalho-secao">
+          <header className="cabecalho-processo">
             <h2 id="titulo-processo">Do primeiro contato ao uso no dia a dia.</h2>
             <p>Cada etapa tem um propósito. E uma próxima decisão bem definida.</p>
-          </div>
-          <div className="passo-a-passo">
-            <div className="passo-linha" aria-hidden="true"></div>
-            <ol className="passo-lista">
-              {etapas.map((etapa, indice) => (
-                <li key={etapa.numero} className="passo-item">
-                  <div className="passo-conteudo">
-                    <span className="passo-numero" aria-hidden="true">{etapa.numero}</span>
-                    <div className="passo-texto">
-                      <h3>{etapa.titulo}</h3>
-                      <p>{etapa.descricao}</p>
-                    </div>
+          </header>
+          <ol className="passo-lista">
+            {etapas.map((etapa, indice) => (
+              <li key={etapa.numero} className="passo-item">
+                <div className="passo-conteudo">
+                  <span className="passo-numero" aria-hidden="true">{etapa.numero}</span>
+                  <div className="passo-texto">
+                    <h3>{etapa.titulo}</h3>
+                    <p>{etapa.descricao}</p>
                   </div>
-                  {indice < etapas.length - 1 && <span className="passo-conector" aria-hidden="true" />}
-                </li>
-              ))}
-            </ol>
-          </div>
-          <div className="ponte-processo">
-            <p>Quer visualizar o que pode sair dessa conversa?</p>
-            <Link className="link-seta" href="/projetos">Explore os projetos e automações <Icone nome="seta" tamanho={18} /></Link>
+                </div>
+              </li>
+            ))}
+          </ol>
+          <div className="cta-final-processo">
+            <p>Quer ver o que podemos construir?</p>
+            <Link className="botao botao-roxo" href="/projetos">Explorar projetos <Icone nome="seta" tamanho={18} aria-hidden="true" /></Link>
           </div>
         </div>
       </section>
