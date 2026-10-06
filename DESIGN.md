@@ -2,16 +2,19 @@
 name: Monky Soluções
 description: Site empresarial predominantemente claro com identidade roxa Monky.
 colors:
-  roxo: "#632ca6"
+  roxo: "#5F1EA5"
   roxo-escuro: "#351451"
   roxo-claro: "#eee4f8"
-  texto: "#211a2c"
-  texto-suave: "#655e6e"
-  fundo-suave: "#f8f7fa"
-  borda: "#e7e3eb"
-  borda-marca: "#cdb7e3"
+  texto: "#16111D"
+  texto-suave: "#443D4D"
+  fundo: "#FAF9FC"
+  fundo-suave: "#F4F1F8"
+  fundo-alt: "#EEEAEF"
+  borda: "#D4CADB"
+  borda-forte: "#C8C0D4"
+  borda-marca: "#C8BFD8"
   branco: "#fff"
-  texto-sobre-roxo: "#e0d0ee"
+  texto-sobre-roxo: "#F5EFFF"
 typography:
   display:
     fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
@@ -150,8 +153,11 @@ A paleta combina roxo de marca com neutros levemente violetas.
 
 - **Texto escuro** (`texto`): títulos e conteúdo principal.
 - **Texto suave** (`texto-suave`): parágrafos, navegação e notas.
+- **Fundo principal** (`fundo`): fundo principal das páginas.
 - **Fundo suave** (`fundo-suave`): alternância de seções, rodapé e galeria do diálogo.
+- **Fundo alternativo** (`fundo-alt`): áreas sutis de destaque.
 - **Borda clara** (`borda`): separação de superfícies e controles.
+- **Borda forte** (`borda-forte`): controles e elementos interativos.
 - **Borda de marca** (`borda-marca`): contorno mais presente nos cartões de solução e serviço.
 - **Branco** (`branco`): fundo principal, cartões e texto sobre fundos roxos.
 
@@ -209,7 +215,7 @@ A logo usa o arquivo existente `public/images/monky-logo.png`, sem placa de fund
 
 O botão base tem altura mínima de (48px), conteúdo centralizado e espaço de (10px) entre texto e ícone. Há quatro variantes compartilhadas: roxo, secundário contornado, claro e demonstração transparente. O botão de demonstração dentro do cartão usa texto menor (.84rem).
 
-O hover do roxo escurece; o secundário recebe borda roxa e fundo lavanda; o claro recebe `#efe6fa`; demonstração recebe fundo lavanda. No banner, o secundário tem texto branco, borda `#a48abc` e hover `rgba(255, 255, 255, .1)`.
+O hover do roxo escurece; o secundário recebe borda roxa e fundo lavanda; o claro tem fundo roxo e texto branco; demonstração recebe fundo lavanda. No banner, o secundário tem texto branco, borda `#a48abc` e hover `rgba(255, 255, 255, .1)`.
 
 As transições de cor, fundo e borda duram (.16s), com easing CSS padrão. A preferência de movimento reduzido remove essas transições e a rolagem suave. Não existe um tratamento visual próprio de `:active` declarado.
 
