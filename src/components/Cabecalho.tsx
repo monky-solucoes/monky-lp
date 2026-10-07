@@ -17,6 +17,15 @@ export default function Cabecalho() {
   useEffect(() => { definirMenuAberto(false) }, [caminho])
 
   useEffect(() => {
+    const desktop = window.matchMedia('(min-width: 961px)')
+    function aoMudarTela() {
+      if (desktop.matches) definirMenuAberto(false)
+    }
+    desktop.addEventListener('change', aoMudarTela)
+    return () => desktop.removeEventListener('change', aoMudarTela)
+  }, [])
+
+  useEffect(() => {
     if (!menuAberto) return
     function fechar(evento: KeyboardEvent) {
       if (evento.key === 'Escape') {
@@ -56,7 +65,8 @@ export default function Cabecalho() {
             </Link>
           ))}
           <a className="botao botao-roxo contato-mobile" href={criarLinkHero()}
-            target="_blank" rel="noreferrer" data-analytics-origem="header_mobile">Falar com a Monky</a>
+            target="_blank" rel="noreferrer" data-analytics-origem="header_mobile"
+            onClick={() => definirMenuAberto(false)}>Falar com a Monky</a>
         </nav>
         <a className="botao botao-roxo contato-desktop" href={criarLinkHero()}
           target="_blank" rel="noreferrer" data-analytics-origem="header">Falar com a Monky</a>

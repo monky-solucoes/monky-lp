@@ -87,7 +87,7 @@ export default function SecaoDemonstracoes({ destaque = false }: { destaque?: bo
                   ) : (
                     <div className="imagem-projeto">
                       <Image src={projeto.imagem} alt={`Prévia do projeto ${projeto.nome}`} width={1586} height={992}
-                        sizes="(max-width: 700px) 82vw, (max-width: 960px) 68vw, 440px" />
+                        sizes="(max-width: 700px) 86vw, (max-width: 960px) 460px, 400px" />
                     </div>
                   )}
                 </button>

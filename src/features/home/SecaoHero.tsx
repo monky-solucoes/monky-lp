@@ -21,7 +21,7 @@ export default function SecaoHero() {
         </div>
         <div className="arte-hero">
           <Image src="/images/hero-dominos.webp" alt="" width={1672} height={941} priority
-            sizes="(max-width: 700px) 100vw, (max-width: 1200px) 50vw, 600px" />
+            sizes="(max-width: 480px) calc(100vw - 40px), (max-width: 820px) 430px, (max-width: 1200px) 50vw, 600px" />
         </div>
       </div>
     </section>
