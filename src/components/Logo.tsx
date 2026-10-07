@@ -7,7 +7,7 @@ export default function Logo() {
       alt="Monky Soluções"
       width={779}
       height={202}
-      priority
+      sizes="160px"
       className="logo"
     />
   )

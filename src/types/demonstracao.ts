@@ -33,4 +33,5 @@ export interface Demonstracao {
   recursos: string[]
   telas: TelaDemonstracao[]
   mensagemWhatsApp: string
+  fluxo?: { titulo: string; descricao: string }[]
 }

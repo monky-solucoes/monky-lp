@@ -1,6 +1,6 @@
 import Icone from '@/components/Icone'
 import { demonstracoes } from '@/data/demonstracoes'
-import { criarLinkContatoGenerico, criarLinkWhatsApp } from '@/utils/whatsapp'
+import { criarLinkWhatsApp, criarLinkSolucao } from '@/utils/whatsapp'
 
 const demonstracaoWhatsApp = demonstracoes.find((demonstracao) => demonstracao.id === 'automacao-whatsapp')
 const demonstracaoSite = demonstracoes.find((demonstracao) => demonstracao.id === 'site-institucional')
@@ -11,21 +11,21 @@ const outrasSolucoes = [
     idAnalytics: 'automacao_whatsapp',
     nome: 'Automação de WhatsApp',
     descricao: 'Atendimento e vendas com menos trabalho repetitivo.',
-    link: demonstracaoWhatsApp ? criarLinkWhatsApp(demonstracaoWhatsApp.mensagemWhatsApp) : criarLinkContatoGenerico(),
+    link: demonstracaoWhatsApp ? criarLinkWhatsApp(demonstracaoWhatsApp.mensagemWhatsApp) : criarLinkSolucao('Automações'),
   },
   {
     icone: 'site' as const,
     idAnalytics: 'sites_institucionais',
     nome: 'Sites institucionais',
     descricao: 'Sua empresa com presença profissional e mais credibilidade.',
-    link: demonstracaoSite ? criarLinkWhatsApp(demonstracaoSite.mensagemWhatsApp) : criarLinkContatoGenerico(),
+    link: demonstracaoSite ? criarLinkWhatsApp(demonstracaoSite.mensagemWhatsApp) : criarLinkSolucao('Sites e Landing Pages'),
   },
   {
     icone: 'codigo' as const,
     idAnalytics: 'sistemas_personalizados',
     nome: 'Sistemas personalizados',
     descricao: 'Soluções sob medida para o processo real da sua empresa.',
-    link: criarLinkContatoGenerico(),
+    link: criarLinkSolucao('Sistemas personalizados'),
   },
 ]
 

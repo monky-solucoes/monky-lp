@@ -65,3 +65,57 @@ Validação: `npm run typecheck` executado sem erros. O `next build` não pôde 
 - O modal mobile passa a rolar como uma página única até o CTA.
 - Sidebar do desktop teve espaçamento compactado e CTA reposicionado para evitar áreas vazias.
 - Título atualizado para “O projeto pode incluir e muito mais”.
+
+## 06/10/2026 — Refinamento visual completo (Polish final)
+
+### Hero Home
+- Ajuste contraste texto complementar: opacity .92, font-weight 500
+- Altura limitada (calc(75vh - 92px) / max-height: 520px) para mostrar preview da próxima seção
+
+### Como funciona — Timeline limpa sem linhas
+- Desktop: grid 3×2 (01 02 03 / 04 05 06) sem conectores
+- Tablet: grid 2×3 sem conectores
+- Mobile: lista vertical 1×6 sem linha vertical
+- Números grandes em roxo (2.8rem desktop, 2.4rem tablet, 2.2rem mobile)
+- Hierarquia clara: número → título → descrição
+- CTA final consolidado em linha única com botão roxo
+- Removidas todas as linhas/conectores (formato S removido)
+
+### Header 'Alguns projetos'
+- Compactado: título + descrição unificados, removido bloco redundante à direita
+- Mesmo texto em home e /projetos
+
+### Carousel de Projetos - 3 cards visíveis
+- Desktop: min(32vw, 400px), gap 24px, padding 64px
+- Tablet: min(65vw, 460px), padding 48px
+- Mobile: 78vw, padding 0
+- Setas redesenhadas: 44px, borda 2px roxo, sombra suave, posição -72px
+
+### Cards de Projetos padronizados
+- Removidos ícones/categorias do topo
+- Estrutura: Nome → Descrição → Imagem → 2 benefícios → 2 CTAs
+- Botão 'Explorar produto': hover no desktop, visível no tablet/mobile
+- Removido destaque fixo do Nexora (borda roxa permanente)
+
+### Botão 'Falar com a Monky' - Texto branco
+- Fundo roxo (var(--roxo)), texto branco (#fff)
+- Hover: var(--roxo-escuro)
+- Consistente em todas as páginas
+
+### Contraste & Legibilidade - Tokens atualizados
+- --texto: #16111D, --texto-suave: #443D4D
+- --borda: #D4CADB, --borda-forte: #C8C0D4
+- --roxo: #5F1EA5
+- Fondos: --fundo: #FAF9FC, --fundo-suave: #F4F1F8, --fundo-alt: #EEEAEF
+
+### Ritmo Vertical - Espaçamento consistente
+- .secao + .secao sem margin-top extra
+- Seções mais compactas e intencionais
+
+### Responsividade testada
+- 1920x1080: 3 cards, timeline 3×2, hero 75vh
+- 1440x900: 2-3 cards, timeline 2×3, hero ajustado
+- 1366x768: 2 cards, timeline 2×3, hero ajustado
+- 700px: 1 card, timeline vertical 1×6, hero stack
+
+Build: Typecheck PASS, Build SUCCESS (9 páginas estáticas), TypeScript sem erros

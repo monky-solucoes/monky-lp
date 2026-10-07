@@ -1,51 +1,36 @@
 import Icone from '@/components/Icone'
-import Revelar from '@/components/Revelar'
+import Link from 'next/link'
 
-const diferenciais = [
-  {
-    icone: 'alvo' as const,
-    titulo: 'Feito para o problema certo',
-    texto: 'A solução parte da rotina da empresa, não de um pacote genérico cheio de funções que ninguém usa.',
-  },
-  {
-    icone: 'camadas' as const,
-    titulo: 'Começa simples e pode crescer',
-    texto: 'Dá para lançar o essencial primeiro e adicionar automações, relatórios e novos módulos conforme a necessidade.',
-  },
-  {
-    icone: 'chat' as const,
-    titulo: 'Contato direto durante o projeto',
-    texto: 'Ajustes e decisões são tratados de forma próxima para o sistema continuar alinhado ao uso real.',
-  },
+const valores = [
+  { icone: 'check' as const, titulo: 'Simplicidade', texto: 'Ferramentas claras, com as funções que fazem sentido para o dia a dia.' },
+  { icone: 'chat' as const, titulo: 'Contato próximo', texto: 'Uma conversa direta para alinhar necessidades, decisões e próximos passos.' },
+  { icone: 'alvo' as const, titulo: 'Soluções sob medida', texto: 'O projeto parte da rotina da empresa, não de um pacote único.' },
+  { icone: 'camadas' as const, titulo: 'Evolução contínua', texto: 'Uma base que pode receber melhorias conforme surgem novas necessidades.' },
 ]
 
 export default function SecaoSobre() {
   return (
-    <section className="secao secao-sobre" id="sobre">
-      <div className="container conteudo-sobre">
-        <div className="bloco-sobre-principal">
-          <span className="sobretitulo">Sobre a Monky</span>
-          <h2>Tecnologia prática para negócios que querem evoluir.</h2>
-          <p>
-            A Monky cria sistemas, sites e automações pensados para resolver problemas reais da operação. A ideia é deixar processos mais claros, reduzir trabalho manual e criar uma base digital que acompanhe o crescimento da empresa.
-          </p>
-          <div className="assinatura-sobre">
-            <span className="marca-sobre">MONKY</span>
+    <section className="secao secao-sobre sobre-editorial">
+      <div className="container">
+        <div className="apresentacao-sobre">
+          <div><h1>Tecnologia para negócios reais.</h1><p>A Monky cria soluções digitais para empresas que querem organizar processos, automatizar tarefas e melhorar sua presença digital.</p>
+            <p>Primeiro entendemos o problema. Depois construímos o que realmente faz sentido.</p>
+            <p className="localizacao-sobre">Desenvolvido em Pelotas/RS.</p>
+            <Link className="link-seta" href="/como-funciona">Conheça nosso jeito de trabalhar <Icone nome="seta" tamanho={18} /></Link>
           </div>
+          <aside className="compromisso-monky" aria-labelledby="titulo-compromisso">
+            <h2 id="titulo-compromisso">A melhor tecnologia é a que faz sentido para quem usa.</h2>
+            <p>Não começa pela ferramenta. Começa pela sua rotina, pelas pessoas e pelo problema que precisa ser resolvido.</p>
+            <ul>
+              <li><Icone nome="check" tamanho={20} aria-hidden="true" /><span>Escopo combinado antes de desenvolver</span></li>
+              <li><Icone nome="check" tamanho={20} aria-hidden="true" /><span>Validação com você durante o projeto</span></li>
+              <li><Icone nome="check" tamanho={20} aria-hidden="true" /><span>Melhorias conforme a operação precisar</span></li>
+            </ul>
+          </aside>
         </div>
-
-        <div className="grade-diferenciais-sobre">
-          {diferenciais.map((item, indice) => (
-            <Revelar key={item.titulo} atraso={indice * 0.06}>
-              <article className="diferencial-sobre">
-                <span className="icone-diferencial"><Icone nome={item.icone} tamanho={22} /></span>
-                <div>
-                  <h3>{item.titulo}</h3>
-                  <p>{item.texto}</p>
-                </div>
-              </article>
-            </Revelar>
-          ))}
+        <div className="cabecalho-valores"><h2 className="titulo-valores">O que valorizamos</h2><p>Princípios que orientam o que construímos e como conversamos.</p></div>
+        <div className="grade-valores">
+          {valores.map((valor) => <article key={valor.titulo}><span className="icone-valor"><Icone nome={valor.icone} tamanho={25} aria-hidden="true" /></span><div><h3>{valor.titulo}</h3><p>{valor.texto}</p></div></article>)}
         </div>
       </div>
     </section>

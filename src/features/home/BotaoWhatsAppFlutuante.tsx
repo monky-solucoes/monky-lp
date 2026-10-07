@@ -1,10 +1,10 @@
-import { criarLinkContatoGenerico } from '@/utils/whatsapp'
+import { criarLinkHero } from '@/utils/whatsapp'
 
 export default function BotaoWhatsAppFlutuante() {
   return (
     <a
       className="whatsapp-flutuante"
-      href={criarLinkContatoGenerico()}
+      href={criarLinkHero()}
       target="_blank"
       rel="noreferrer"
       aria-label="Falar com a Monky no WhatsApp"

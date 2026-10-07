@@ -1,56 +1,84 @@
+'use client'
+
 import Icone from '@/components/Icone'
-import Revelar from '@/components/Revelar'
+import Link from 'next/link'
+import Image from 'next/image'
 
 const etapas = [
   {
     numero: '01',
-    icone: 'chat' as const,
-    nome: 'Entender',
-    descricao: 'A gente mapeia o problema, o processo atual e onde existe perda de tempo ou oportunidade.',
+    titulo: 'Você conta o problema',
+    descricao: 'Explique sua rotina, dificuldade ou ideia.'
   },
   {
     numero: '02',
-    icone: 'codigo' as const,
-    nome: 'Construir',
-    descricao: 'Desenhamos e desenvolvemos a solução com foco em uma experiência simples de usar no dia a dia.',
+    titulo: 'A gente entende',
+    descricao: 'Mapeamos o que acontece hoje e onde está o problema.'
   },
   {
     numero: '03',
-    icone: 'raio' as const,
-    nome: 'Evoluir',
-    descricao: 'Depois de colocar em uso, o sistema pode ganhar novas automações, integrações e módulos.',
+    titulo: 'Definimos o essencial',
+    descricao: 'Combinamos o que entra na primeira versão.'
+  },
+  {
+    numero: '04',
+    titulo: 'Desenvolvemos',
+    descricao: 'Transformamos a ideia em telas e fluxos.'
+  },
+  {
+    numero: '05',
+    titulo: 'Você testa',
+    descricao: 'Você valida a solução antes da entrega final.'
+  },
+  {
+    numero: '06',
+    titulo: 'Ajustamos e colocamos no ar',
+    descricao: 'Refinamos detalhes e entregamos pronta para uso.'
   },
 ]
 
 export default function SecaoComoFunciona() {
   return (
-    <section className="secao secao-processo" id="como-funciona">
-      <div className="container">
-        <div className="cabecalho-secao cabecalho-secao-dividido">
+    <>
+      <section className="hero-processo">
+        <div className="container abertura-processo">
           <div>
-            <span className="sobretitulo">Como funciona</span>
-            <h2>Da dor do negócio até uma solução funcionando.</h2>
+            <h1>Você não precisa chegar sabendo o que precisa.</h1>
+            <p>Conte o problema. A solução vem depois.</p>
+            <p className="apoio-processo">Uma conversa direta, um escopo claro e você participando das decisões. É assim que uma dificuldade da rotina começa a virar solução.</p>
+            <a className="link-seta" href="#etapas">Conheça o caminho <Icone nome="seta" tamanho={18} /></a>
           </div>
-          <p>
-            Sem complicar o que pode ser simples. O foco é construir o que realmente melhora a operação e pode gerar retorno.
-          </p>
+          <figure className="foto-conversa">
+            <Image src="/images/conversa-monky.webp" alt="Cena ilustrativa de uma pessoa sorrindo durante uma conversa de trabalho com notebook." fill priority sizes="(max-width: 700px) calc(100vw - 40px), 520px" />
+            <figcaption><h2>Uma conversa<br />de cada vez.</h2><p>Espaço para ouvir, entender e construir juntos.</p></figcaption>
+          </figure>
         </div>
-
-        <div className="linha-processo">
-          {etapas.map((etapa, indice) => (
-            <Revelar key={etapa.numero} atraso={indice * 0.07}>
-              <article className="etapa-processo">
-                <div className="topo-etapa-processo">
-                  <span className="icone-etapa"><Icone nome={etapa.icone} tamanho={22} /></span>
-                  <strong>{etapa.numero}</strong>
+      </section>
+      <section className="secao secao-processo" id="etapas" aria-labelledby="titulo-processo">
+        <div className="container">
+          <header className="cabecalho-processo">
+            <h2 id="titulo-processo">Do primeiro contato ao uso no dia a dia.</h2>
+            <p>Cada etapa tem um propósito. E uma próxima decisão bem definida.</p>
+          </header>
+          <ol className="passo-lista">
+            {etapas.map((etapa, indice) => (
+              <li key={etapa.numero} className="passo-item">
+                <div className="passo-conteudo">
+                  <span className="passo-numero" aria-hidden="true">{etapa.numero}</span>
+                  <div className="passo-texto">
+                    <h3>{etapa.titulo}</h3>
+                    <p>{etapa.descricao}</p>
+                  </div>
                 </div>
-                <h3>{etapa.nome}</h3>
-                <p>{etapa.descricao}</p>
-              </article>
-            </Revelar>
-          ))}
+              </li>
+            ))}
+          </ol>
+          <div className="cta-final-processo">
+            <p>Quer ver o que podemos construir?</p>
+            <Link className="botao botao-roxo" href="/projetos">Explorar projetos <Icone nome="seta" tamanho={18} aria-hidden="true" /></Link>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   )
 }

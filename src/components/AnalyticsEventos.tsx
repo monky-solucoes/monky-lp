@@ -1,7 +1,8 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { usePathname } from 'next/navigation'
+import { registrarEvento as registrarEventoGA } from '@/lib/analytics'
 
 type ParametrosAnalytics = Record<string, string>
 
@@ -10,11 +11,7 @@ function registrarEvento(nome: string, parametros: ParametrosAnalytics) {
     return
   }
 
-  const gtag = window.gtag
-
-  if (typeof gtag === 'function') {
-    gtag('event', nome, parametros)
-  }
+  registrarEventoGA(nome, parametros)
 
   const clarity = window.clarity
 
@@ -52,26 +49,26 @@ function registrarVisualizacaoPagina() {
     return
   }
 
-  const gtag = window.gtag
-
-  if (typeof gtag === 'function') {
-    gtag('page_view', {
-      page_path: window.location.pathname,
-      page_location: window.location.href,
-    })
-  }
+  registrarEventoGA('page_view', {
+    page_path: window.location.pathname,
+    page_location: window.location.href,
+    page_title: document.title,
+  })
 }
 
 export default function AnalyticsEventos() {
   const caminho = usePathname()
+  const ultimoCaminho = useRef<string | null>(null)
 
   /*
    * Registra a visualização sempre que a rota mudar.
    *
-   * Como nossa landing page praticamente trabalha em uma única rota,
-   * normalmente será disparado apenas na entrada do usuário.
+   * O layout compartilhado mantém uma única instância entre as rotas.
+   * O ref evita a repetição do efeito inicial no Strict Mode.
    */
   useEffect(() => {
+    if (ultimoCaminho.current === caminho) return
+    ultimoCaminho.current = caminho
     registrarVisualizacaoPagina()
   }, [caminho])
 

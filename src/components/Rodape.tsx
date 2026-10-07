@@ -1,41 +1,30 @@
+import Link from 'next/link'
 import Logo from './Logo'
 import { contato } from '@/data/contato'
-import { criarLinkContatoGenerico } from '@/utils/whatsapp'
+import { navegacao } from '@/data/navegacao'
+import { criarLinkHero } from '@/utils/whatsapp'
 
 export default function Rodape() {
   return (
     <footer className="rodape">
       <div className="container grade-rodape">
         <div className="marca-rodape">
-          <Logo />
+          <Link className="base-logo" href="/" aria-label="Monky Soluções — início"><Logo /></Link>
           <p>Tecnologia para negócios reais.</p>
+          <span>Desenvolvido em Pelotas/RS.</span>
         </div>
-
-        <div className="navegacao-rodape">
-          <h3>Navegação</h3>
-          <a href="#solucoes">Soluções</a>
-          <a href="#demonstracoes">Cases</a>
-          <a href="#sobre">Sobre</a>
-        </div>
-
+        <nav aria-label="Navegação do rodapé" className="navegacao-rodape">
+          <h2>Navegue</h2>
+          {navegacao.map((link) => <Link key={link.destino} href={link.destino}>{link.nome}</Link>)}
+        </nav>
         <div className="contato-rodape">
-          <h3>Contato</h3>
-          <a
-            href={criarLinkContatoGenerico()}
-            target="_blank"
-            rel="noreferrer"
-            data-analytics-origem="footer"
-          >
-            Falar no WhatsApp
-          </a>
+          <h2>Vamos conversar</h2>
+          <a href={criarLinkHero()} target="_blank" rel="noreferrer" data-analytics-origem="footer">Falar com a Monky</a>
           <a href={`mailto:${contato.email}`}>{contato.email}</a>
-          <span className="cidade-rodape">{contato.cidade}</span>
+          <span>{contato.cidade}</span>
         </div>
       </div>
-
-      <div className="container base-rodape">
-        <span>© 2026 Monky. Todos os direitos reservados.</span>
-      </div>
+      <div className="container base-rodape">© {new Date().getFullYear()} Monky. Todos os direitos reservados.</div>
     </footer>
   )
 }

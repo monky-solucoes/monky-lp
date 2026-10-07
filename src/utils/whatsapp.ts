@@ -5,7 +5,8 @@ function somenteNumeros(valor: string) {
 }
 
 export function criarLinkWhatsApp(mensagem: string) {
-  const numero = somenteNumeros(contato.numeroWhatsApp)
+  const numeroLocal = somenteNumeros(contato.numeroWhatsApp)
+  const numero = numeroLocal.length === 10 || numeroLocal.length === 11 ? `55${numeroLocal}` : numeroLocal
   const texto = encodeURIComponent(mensagem)
 
   if (!numero) {
@@ -25,4 +26,37 @@ export function criarLinkInteresseProjeto(nomeProjeto: string) {
 
 export function criarLinkContatoGenerico() {
   return criarLinkWhatsApp(contato.mensagemGenerica)
+}
+
+export const mensagensWhatsapp = {
+  hero: 'Oi! Vi o site da Monky e quero conversar sobre meu projeto.',
+  solucao: (nome: string) => `Tenho interesse em ${nome}. Podemos conversar?`,
+  ctaFinal: 'Não encontrei exatamente o que preciso. Meu problema é: ',
+  comoFunciona: 'Gostei do processo. Quero começar contando minha rotina.',
+  projetos: 'Vi os projetos no site da Monky e quero conversar sobre uma solução para minha empresa.',
+  sobre: 'Conheci a Monky pelo site e quero conversar sobre uma solução para minha empresa.',
+}
+
+export function criarLinkHero() {
+  return criarLinkWhatsApp(mensagensWhatsapp.hero)
+}
+
+export function criarLinkSolucao(nome: string) {
+  return criarLinkWhatsApp(mensagensWhatsapp.solucao(nome))
+}
+
+export function criarLinkCtaFinal() {
+  return criarLinkWhatsApp(mensagensWhatsapp.ctaFinal)
+}
+
+export function criarLinkComoFunciona() {
+  return criarLinkWhatsApp(mensagensWhatsapp.comoFunciona)
+}
+
+export function criarLinkProjetos() {
+  return criarLinkWhatsApp(mensagensWhatsapp.projetos)
+}
+
+export function criarLinkSobre() {
+  return criarLinkWhatsApp(mensagensWhatsapp.sobre)
 }

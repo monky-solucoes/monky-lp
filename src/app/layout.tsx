@@ -1,6 +1,10 @@
 import type { Metadata, Viewport } from 'next'
 import AnalyticsEventos from '@/components/AnalyticsEventos'
 import AnalyticsScripts from '@/components/AnalyticsScripts'
+import Cabecalho from '@/components/Cabecalho'
+import Rodape from '@/components/Rodape'
+import BotaoWhatsAppFlutuante from '@/features/home/BotaoWhatsAppFlutuante'
+import { StructuredDataLocalBusiness } from '@/components/StructuredData'
 import '../styles/globals.css'
 
 export const metadata: Metadata = {
@@ -66,12 +70,6 @@ export const metadata: Metadata = {
       'max-video-preview': -1,
     },
   },
-
-  icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon.ico',
-    apple: '/apple-touch-icon.png',
-  },
 }
 
 export const viewport: Viewport = {
@@ -90,11 +88,18 @@ export default function LayoutRaiz({
 }: Readonly<PropriedadesLayout>) {
   return (
     <html lang="pt-BR">
+      <head>
+        <StructuredDataLocalBusiness />
+      </head>
       <body>
         <AnalyticsScripts />
         <AnalyticsEventos />
 
-        {children}
+        <a className="pular-conteudo" href="#conteudo">Pular para o conteúdo</a>
+        <Cabecalho />
+        <main id="conteudo" tabIndex={-1}>{children}</main>
+        <Rodape />
+        <BotaoWhatsAppFlutuante />
       </body>
     </html>
   )
