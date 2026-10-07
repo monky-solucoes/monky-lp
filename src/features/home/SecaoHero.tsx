@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import Icone from '@/components/Icone'
 import { criarLinkHero } from '@/utils/whatsapp'
+import heroDominos from '../../../public/images/hero-dominos.webp'
 
 export default function SecaoHero() {
   return (
@@ -20,7 +21,7 @@ export default function SecaoHero() {
           <p className="orientacao-hero">Conte onde sua rotina trava. A gente desenha a solução.</p>
         </div>
         <div className="arte-hero">
-          <Image src="/images/hero-dominos.webp" alt="" width={1672} height={941} priority
+          <Image src={heroDominos} alt="" priority
             sizes="(max-width: 480px) calc(100vw - 40px), (max-width: 820px) 430px, (max-width: 1200px) 50vw, 600px" />
         </div>
       </div>

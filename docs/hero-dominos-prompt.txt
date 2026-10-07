@@ -1,0 +1,30 @@
+Hero Monky — 07/10/2026
+
+Gerado com a ferramenta integrada image_gen, em modo de edição com fundo
+transparente. Referência: versão anterior de public/images/hero-dominos.png.
+PNG gerado preservado em public/images/hero-dominos.png.
+WebP para a página: quality 88, alphaQuality 100, effort 6, sem alterar o alfa.
+O componente usa importação estática para obter dimensões e versão de cache
+automaticamente a partir do arquivo.
+
+Prompt da geração inicial:
+
+Use case: background-extraction / stylized-concept.
+Asset type: transparent 3D hero illustration for the Monky Soluções website, displayed on the right of a deep purple landing-page hero.
+Input image 1: edit target and concept reference, the current hero-dominos.png.
+Primary request: Redesign this domino illustration with a flawless transparent background. Preserve its visual metaphor: technology and automation creating a chain reaction that leads to business growth. Keep a wide horizontal row of nine thick, softly bevelled dark graphite domino tiles, four progressively leaning tiles at the left transitioning to five upright tiles on the right, with a subtle increase in height toward the right. Refine the geometry, spacing and icon clarity. Preserve the general sequence of simple centered symbols: gear, bars, team, lightning bolt, workflow, white monkey emblem, target, bars, upward-right arrow. Keep the recognizable simple monkey-face emblem from the reference. The last tile may have a restrained Monky purple face (#5F1EA5) and an ivory upward-right arrow, without neon glow.
+Style/medium: premium restrained 3D product illustration, satin charcoal surfaces, softly rounded corners, crisp ivory and pale-lavender icons, subtle purple rim highlights, soft studio lighting from upper left. Well-defined silhouettes that remain legible on a dark purple background. Elegant business technology art.
+Composition/framing: landscape 2:1 canvas. The row fills about 90 percent of the canvas width and 65 percent of its height, vertically centered, with a small clear safe margin all around. Slight three-quarter front view, consistent realistic perspective. All tiles fully visible, no cropping.
+Scene/backdrop: actual RGBA transparency, completely isolated tiles. Delete the entire purple background AND the entire reflective floor. Fully transparent spaces between tiles and around every object.
+Constraints: no floor, no base, no platform, no reflection, no cast shadow outside the silhouettes, no purple puddles or stray fragments, no opaque backdrop, no gradient background, no checkerboard pattern drawn into pixels, no halo around cutout edges, no particles, no extra floating UI cards, no text, no watermark. Only the nine domino tiles should have opacity. Output a clean production-ready transparent PNG.
+
+Revisão solicitada: retirar o destaque roxo da última peça, mantendo o mesmo
+grafite das demais e a seta clara. Editada com image_gen e transparência ativada.
+
+Prompt final da revisão:
+
+Use case: precise-object-edit.
+Input image: current transparent hero-dominos illustration, the edit target.
+Make exactly one localized change: the far-right domino currently has a saturated violet/purple front face. Change that front face to the same satin dark graphite/charcoal material and restrained lighting as the adjacent upright domino with the bar-chart icon. The entire final domino should look like it belongs to the same set of black dominoes. Preserve its existing ivory upward-right arrow symbol, crisp and flat, with no neon glow, no bright colored panel, and no special spotlight.
+Preserve every other domino, icon, monkey emblem, object position, scale, silhouette, spacing, camera angle, canvas dimensions and composition exactly. Do not redesign any other element.
+Preserve the true transparent RGBA background and all transparent gaps between tiles. No background, no floor, no reflections, no shadows outside the object silhouettes, no colored puddles, no halo, no floating fragments, no text. Production-ready transparent PNG.
